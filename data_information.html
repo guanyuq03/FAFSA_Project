@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Data Information</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Data Information</h1>
+    <nav>
+        <a href=" ">Home</a >
+        <a href="data_information.html">Data Information</a >
+        <a href="visualization.html">Visualizations</a >
+        <a href="conclusion.html">Conclusion</a >
+    </nav>
+  </header>
+
+  <section id="data-info">
+    <h2>Data Information</h2>
+    <p>
+      <strong>cleaned.csv</strong> includes columns like:
+      <code>OPE ID, School, State, Zip Code, School Type, Dependent Students_Q1, Independent Students_Q1, Quarterly Total_Q1, ...</code>
+      (and similar columns for Q2..Q5).
+    </p >
+    <ul>
+      <li><strong>Chart 1:</strong> Bar Chart – Top 10 schools by the selected quarter’s total.</li>
+      <li><strong>Chart 2:</strong> Line Chart – Aggregated totals for Q1..Q5.</li>
+      <li><strong>Chart 3:</strong> Scatter Plot – Dependent vs. Independent for selected quarter.</li>
+      <li><strong>Chart 4:</strong> Pie/Donut – School Type by selected quarter.</li>
+      <li><strong>Chart 5:</strong> Stacked Bar – Summed Dep vs. Ind for Q1..Q5.</li>
+      <li><strong>Chart 6:</strong> Map Visualization – By selected quarter’s total.</li>
+    </ul>
+  </section>
+
+  <main>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="visualize.js"></script>
+</body>
+</html>
