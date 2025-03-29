@@ -5,10 +5,9 @@ const tooltip = d3.select("body")
   .append("div")
   .attr("class", "tooltip");
 
-let globalData = [];     // from cleaned.csv
-let selectedQuarter = "Q1"; // default quarter
+let globalData = [];
+let selectedQuarter = "Q1";
 
-// Color map for each quarter
 const quarterColor = {
   Q1: "#69b3a2",
   Q2: "#ff7f0e",
@@ -18,14 +17,14 @@ const quarterColor = {
 };
 
 /*********************************************
- * Clear a container by ID
+ * Utility to clear container
  *********************************************/
 function clearContainer(id) {
   d3.select(id).selectAll("*").remove();
 }
 
 /*********************************************
- * Chart 1: Bar Chart (Top 10 Schools by Selected Quarter)
+ * Chart 1: Bar Chart (Animated)
  *********************************************/
 function drawBarChart(q) {
   clearContainer("#viz1");
@@ -65,36 +64,43 @@ function drawBarChart(q) {
 
   svg.append("g").call(d3.axisLeft(y));
 
-  svg.selectAll("rect")
-     .data(data)
-     .join("rect")
-     .attr("x", d => x(d.School))
-     .attr("y", d => y(+d[col]))
-     .attr("width", x.bandwidth())
-     .attr("height", d => height - y(+d[col]))
-     .attr("fill", quarterColor[q])
-     .on("mouseover", (event, d) => {
-       tooltip.style("opacity", 1)
-              .html(`School: ${d.School}<br>${q} Total: ${d[col]}`);
-     })
-     .on("mousemove", (event) => {
-       tooltip.style("left", event.pageX + 10 + "px")
-              .style("top", event.pageY + "px");
-     })
-     .on("mouseout", () => {
-       tooltip.style("opacity", 0);
-     });
+  const bars = svg.selectAll("rect")
+    .data(data)
+    .join("rect")
+    .attr("x", d => x(d.School))
+    .attr("y", height)
+    .attr("width", x.bandwidth())
+    .attr("height", 0)
+    .attr("fill", quarterColor[q]);
+
+  bars.transition()
+    .duration(800)
+    .delay((d, i) => i * 50)
+    .attr("y", d => y(+d[col]))
+    .attr("height", d => height - y(+d[col]));
+
+  bars.on("mouseover", (event, d) => {
+      tooltip.style("opacity", 1)
+             .html(`School: ${d.School}<br>${q} Total: ${d[col]}`);
+    })
+    .on("mousemove", (event) => {
+      tooltip.style("left", event.pageX + 10 + "px")
+             .style("top", event.pageY + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.style("opacity", 0);
+    });
 }
 
 /*********************************************
- * Chart 2: Line Chart (Aggregated Q1–Q5)
+ * Chart 2: Line Chart
  *********************************************/
 function drawLineChartOnce() {
   d3.select("#viz2").selectAll("*").remove();
 
   const data2 = ["Q1", "Q2", "Q3", "Q4", "Q5"].map(q => ({
     quarter: +q[1],
-    total: d3.sum(globalData, d => +d[`Quarterly Total_${q}`])
+    total: d3.sum(globalData, d => +d["Quarterly Total_" + q])
   }));
 
   const margin = { top: 30, right: 30, bottom: 50, left: 60 },
@@ -145,7 +151,7 @@ function drawLineChartOnce() {
 }
 
 /*********************************************
- * Chart 3: Scatter Plot (Dep vs. Ind for selected quarter)
+ * Chart 3: Scatter Plot
  *********************************************/
 function drawScatterChart(q) {
   clearContainer("#viz3");
@@ -196,77 +202,20 @@ function drawScatterChart(q) {
 }
 
 /*********************************************
- * Chart 4: Pie/Donut (School Type by selected quarter)
- *********************************************/
-function drawPieChart(q) {
-  clearContainer("#viz4");
-  const col = "Quarterly Total_" + q;
-
-  const rollup = d3.rollups(globalData, v => d3.sum(v, d => +d[col]), d => d["School Type"]);
-  const data = rollup.map(([type, total]) => ({ type, total }));
-
-  const margin = 20, width = 400, height = 400;
-  const radius = Math.min(width, height) / 2 - margin;
-
-  const svg = d3.select("#viz4")
-    .append("svg")
-    .attr("class", "chart-svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", `translate(${width / 2},${height / 2})`);
-
-  const color = d3.scaleOrdinal()
-    .domain(data.map(d => d.type))
-    .range(d3.schemeTableau10);
-
-  const pie = d3.pie().sort(null).value(d => d.total);
-  const arc = d3.arc().innerRadius(70).outerRadius(radius);
-  const arcs = pie(data);
-
-  svg.selectAll("path")
-     .data(arcs)
-     .join("path")
-     .attr("d", arc)
-     .attr("fill", d => color(d.data.type))
-     .on("mouseover", (event, d) => {
-       tooltip.style("opacity", 1)
-              .html(`Type: ${d.data.type}<br>${q} Total: ${d.data.total}`);
-     })
-     .on("mousemove", (event) => {
-       tooltip.style("left", event.pageX + 10 + "px")
-              .style("top", event.pageY + "px");
-     })
-     .on("mouseout", () => {
-       tooltip.style("opacity", 0);
-     });
-
-  svg.selectAll("text")
-     .data(arcs)
-     .join("text")
-     .attr("transform", d => `translate(${arc.centroid(d)})`)
-     .attr("text-anchor", "middle")
-     .style("fill", "#fff")
-     .text(d => d.data.type);
-}
-
-/*********************************************
- * Update quarter charts
+ * Update Charts per Quarter
  *********************************************/
 function updateCharts(q) {
   drawBarChart(q);
   drawScatterChart(q);
-  drawPieChart(q);
 }
 
 /*********************************************
- * MAIN: Load data and initialize
+ * MAIN: Load Data and Initialize
  *********************************************/
 d3.csv("cleaned.csv").then(data => {
   globalData = data;
-
-  drawLineChartOnce();        // Chart 2
-  updateCharts(selectedQuarter);  // Charts 1, 3, 4
+  drawLineChartOnce();
+  updateCharts(selectedQuarter);
 
   d3.selectAll(".tab-button").on("click", function () {
     d3.selectAll(".tab-button").classed("active", false);
