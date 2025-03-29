@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAFSA Application Trends and Institutional Factors</title>
-  <link rel="stylesheet" href="styles.css"/>
-  <script src="https://unpkg.com/topojson@3"></script>
+  <title>FAFSA Application Trends</title>
+  <link rel="stylesheet" href="styles.css" />
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson@3"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
@@ -25,19 +24,19 @@
     </div>
 
     <h2>Top 10 Institutions by FAFSA Applications</h2>
-    <div id="bar-chart"></div>
+    <div id="viz1"></div>
 
     <h2>FAFSA Applications by State (Map)</h2>
-    <div id="map"></div>
+    <div id="viz2"></div>
 
     <h2>Dependent vs. Independent Applicants</h2>
-    <div id="scatter-plot"></div>
+    <div id="viz3"></div>
 
-    <h2>Institutional Applicants by State (Altair Scatter)</h2>
-    <div id="altair-scatter"></div>
+    <h2>Scatter Plot by Institution in Selected State (Altair)</h2>
+    <div id="viz4"></div>
 
-    <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
-    <div id="altair-histogram"></div>
+    <h2>Distribution of FAFSA Application Counts (Altair)</h2>
+    <div id="viz5"></div>
   </div>
 
   <script src="visualize.js"></script>
