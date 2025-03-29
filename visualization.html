@@ -2,17 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>FAFSA Application Dashboard</title>
+  <title>FAFSA Application Trends and Institutional Factors</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .tab-button {
+      padding: 6px 12px;
+      margin: 5px;
+      border: 1px solid #999;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .tab-button.active {
+      background-color: #2E86C1;
+      color: white;
+    }
+    .tooltip {
+      position: absolute;
+      background: white;
+      border: 1px solid #999;
+      padding: 6px;
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .viz-section {
+      margin-top: 40px;
+    }
+    iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <h1>FAFSA Application Trends and Institutional Factors</h1>
   <p>This dashboard explores FAFSA application patterns using D3 and Altair visualizations.</p>
 
-  <!-- Tabs -->
-  <div>
+  <div id="tabs">
     <button class="tab-button active" data-quarter="Q1">Q1</button>
     <button class="tab-button" data-quarter="Q2">Q2</button>
     <button class="tab-button" data-quarter="Q3">Q3</button>
@@ -21,13 +59,31 @@
   </div>
 
   <!-- D3 Visualizations -->
-  <div id="viz1"></div>
-  <div id="viz2"></div>
-  <div id="viz3"></div>
+  <div class="viz-section">
+    <h2>Top 10 Institutions by FAFSA Applications</h2>
+    <div id="viz1"></div>
+  </div>
 
-  <!-- Altair Charts -->
-  <iframe src="altair_scatter.html" width="100%" height="400"></iframe>
-  <iframe src="altair_histogram.html" width="100%" height="400"></iframe>
+  <div class="viz-section">
+    <h2>FAFSA Applications by State</h2>
+    <div id="viz2"></div>
+  </div>
+
+  <div class="viz-section">
+    <h2>Dependent vs. Independent Applicants</h2>
+    <div id="viz3"></div>
+  </div>
+
+  <!-- Altair Embedded Charts -->
+  <div class="viz-section">
+    <h2>Scatter Plot by Institution in Selected State (Altair)</h2>
+    <iframe id="altair_scatter" src="altair_scatter_q1.html"></iframe>
+  </div>
+
+  <div class="viz-section">
+    <h2>Distribution of FAFSA Application Counts (Altair)</h2>
+    <iframe id="altair_histogram" src="altair_histogram_q1.html"></iframe>
+  </div>
 
   <script src="visualize.js"></script>
 </body>
