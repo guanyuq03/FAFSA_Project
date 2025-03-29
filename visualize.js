@@ -1,105 +1,72 @@
-/*********************************************
- * Tooltip and Global Variables
- *********************************************/
-const tooltip = d3.select("body").append("div").attr("class", "tooltip");
+const tooltip = d3.select("body")
+  .append("div")
+  .attr("class", "tooltip");
+
 let globalData = [];
 let selectedQuarter = "Q1";
 
-/*********************************************
- * Clear Visualization Containers
- *********************************************/
+// Utility to clear chart areas
 function clearContainer(id) {
   d3.select(id).selectAll("*").remove();
 }
 
-/*********************************************
- * Chart 1: Bar Chart — Top 10 Institutions by FAFSA Applications
- *********************************************/
-function drawBarChart(q) {
+// Draw Bar Chart
+function drawBarChart(quarter) {
   clearContainer("#viz1");
-  const col = "Quarterly Total_" + q;
-
+  const col = "Quarterly Total_" + quarter;
   const data = [...globalData]
+    .filter(d => !isNaN(+d[col]))
     .sort((a, b) => d3.descending(+a[col], +b[col]))
     .slice(0, 10);
 
-  const margin = { top: 40, right: 20, bottom: 80, left: 60 },
-        width = 600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+  const margin = { top: 40, right: 30, bottom: 100, left: 60 };
+  const width = 600 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
 
   const svg = d3.select("#viz1").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
   const x = d3.scaleBand()
     .domain(data.map(d => d.School))
-    .range([0, width])
-    .padding(0.1);
+    .range([0, width]).padding(0.3);
 
   const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => +d[col])])
-    .nice()
+    .domain([0, d3.max(data, d => +d[col]) || 0])
     .range([height, 0]);
 
-  svg.append("g")
-    .call(d3.axisLeft(y));
+  svg.append("g").attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x)).selectAll("text")
+    .attr("transform", "rotate(-45)").style("text-anchor", "end");
 
-  svg.append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .attr("transform", "rotate(-45)")
-    .style("text-anchor", "end");
+  svg.append("g").call(d3.axisLeft(y));
 
   svg.selectAll("rect")
     .data(data)
     .join("rect")
     .attr("x", d => x(d.School))
-    .attr("y", d => y(+d[col]))
     .attr("width", x.bandwidth())
+    .attr("y", d => y(+d[col]))
     .attr("height", d => height - y(+d[col]))
-    .attr("fill", "#5DADE2")
-    .on("mouseover", (event, d) => {
-      tooltip.style("opacity", 1)
-        .html(`<strong>${d.School}</strong><br/>${q} Applications: ${d[col]}`);
-    })
-    .on("mousemove", (event) => {
-      tooltip.style("left", event.pageX + 10 + "px")
-        .style("top", event.pageY + "px");
-    })
-    .on("mouseout", () => {
-      tooltip.style("opacity", 0);
-    });
+    .attr("fill", "#69b3a2");
 }
 
-/*********************************************
- * Chart 2: Choropleth Map — FAFSA Applications by State
- *********************************************/
-function drawMap(q) {
+// Map
+function drawMap(quarter) {
   clearContainer("#viz2");
-  const col = "Quarterly Total_" + q;
+  const col = "Quarterly Total_" + quarter;
+  const stateTotals = d3.rollups(globalData, v => d3.sum(v, d => +d[col]), d => d.State);
+  const totalsObj = Object.fromEntries(stateTotals);
 
-  const stateRollup = d3.rollups(
-    globalData,
-    v => d3.sum(v, d => +d[col]),
-    d => d.State
-  );
-  const stateTotals = Object.fromEntries(stateRollup);
-
-  const width = 800, height = 500;
-  const svg = d3.select("#viz2")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+  const width = 960, height = 500;
+  const svg = d3.select("#viz2").append("svg")
+    .attr("width", width).attr("height", height);
 
   const projection = d3.geoAlbersUsa().scale(1000).translate([width / 2, height / 2]);
   const path = d3.geoPath().projection(projection);
-
-  const colorScale = d3.scaleQuantize()
-    .domain([0, d3.max(Object.values(stateTotals))])
-    .range(d3.schemeBlues[7]);
+  const color = d3.scaleQuantize().domain([0, d3.max(Object.values(totalsObj))])
+    .range(d3.schemeBlues[9]);
 
   d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
     const stateIdMap = {
@@ -117,96 +84,65 @@ function drawMap(q) {
       .data(topojson.feature(us, us.objects.states).features)
       .join("path")
       .attr("d", path)
-      .attr("fill", d => {
-        const abbr = stateIdMap[d.id.toString().padStart(2, "0")];
-        return colorScale(stateTotals[abbr] || 0);
-      })
+      .attr("fill", d => color(totalsObj[stateIdMap[d.id.padStart(2, "0")]] || 0))
       .attr("stroke", "#fff")
-      .on("mouseover", (event, d) => {
-        const abbr = stateIdMap[d.id.toString().padStart(2, "0")];
-        const total = stateTotals[abbr] || 0;
-        tooltip.style("opacity", 1)
-          .html(`<strong>${abbr}</strong><br/>${q} Total: ${total}`);
+      .on("mouseover", function (event, d) {
+        const abbr = stateIdMap[d.id.padStart(2, "0")];
+        tooltip.style("opacity", 1).html(`State: ${abbr}<br>Total: ${totalsObj[abbr] || 0}`);
       })
-      .on("mousemove", (event) => {
+      .on("mousemove", event => {
         tooltip.style("left", event.pageX + 10 + "px").style("top", event.pageY + "px");
       })
       .on("mouseout", () => tooltip.style("opacity", 0));
   });
 }
 
-/*********************************************
- * Chart 3: Scatter Plot — Dependent vs Independent
- *********************************************/
-function drawScatterChart(q) {
+// D3 Scatter Plot
+function drawScatterPlot(quarter) {
   clearContainer("#viz3");
+  const dep = "Dependent Students_" + quarter;
+  const ind = "Independent Students_" + quarter;
 
-  const depCol = "Dependent Students_" + q;
-  const indCol = "Independent Students_" + q;
+  const data = globalData.map(d => ({
+    x: +d[dep], y: +d[ind]
+  })).filter(d => !isNaN(d.x) && !isNaN(d.y));
 
-  const data = globalData.filter(d => d[depCol] && d[indCol]);
-
-  const margin = { top: 40, right: 30, bottom: 50, left: 60 },
-        width = 600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+  const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+  const width = 600 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
 
   const svg = d3.select("#viz3").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-  const x = d3.scaleLinear().domain([0, d3.max(data, d => +d[depCol])]).nice().range([0, width]);
-  const y = d3.scaleLinear().domain([0, d3.max(data, d => +d[indCol])]).nice().range([height, 0]);
+  const x = d3.scaleLinear().domain([0, d3.max(data, d => d.x)]).range([0, width]);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d => d.y)]).range([height, 0]);
 
-  svg.append("g").call(d3.axisLeft(y));
   svg.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x));
+  svg.append("g").call(d3.axisLeft(y));
 
-  svg.selectAll("circle")
-    .data(data)
-    .join("circle")
-    .attr("cx", d => x(+d[depCol]))
-    .attr("cy", d => y(+d[indCol]))
-    .attr("r", 4)
-    .attr("fill", "#2E86C1")
-    .on("mouseover", (event, d) => {
-      tooltip.style("opacity", 1)
-        .html(`<strong>${d.School}</strong><br/>Dep: ${d[depCol]}<br/>Ind: ${d[indCol]}`);
-    })
-    .on("mousemove", (event) => {
-      tooltip.style("left", event.pageX + 10 + "px").style("top", event.pageY + "px");
-    })
-    .on("mouseout", () => tooltip.style("opacity", 0));
+  svg.selectAll("circle").data(data).join("circle")
+    .attr("cx", d => x(d.x)).attr("cy", d => y(d.y)).attr("r", 4).attr("fill", "steelblue");
 }
 
-/*********************************************
- * Altair Embeds will be handled via HTML injection
- *********************************************/
-function loadAltairCharts(q) {
-  document.getElementById("altair_scatter").src = `altair_scatter_q${q}.html`;
-  document.getElementById("altair_histogram").src = `altair_histogram_q${q}.html`;
+// Hook for quarter buttons
+function updateCharts(quarter) {
+  selectedQuarter = quarter;
+  drawBarChart(quarter);
+  drawMap(quarter);
+  drawScatterPlot(quarter);
+
+  document.getElementById("altair-scatter").src = `altair_scatter_${quarter}.html`;
+  document.getElementById("altair-histogram").src = `altair_histogram_${quarter}.html`;
 }
 
-/*********************************************
- * Update all charts when quarter changes
- *********************************************/
-function updateAllCharts(q) {
-  drawBarChart(q);
-  drawMap(q);
-  drawScatterChart(q);
-  loadAltairCharts(q);
-}
-
-/*********************************************
- * MAIN
- *********************************************/
 d3.csv("cleaned.csv").then(data => {
   globalData = data;
-  updateAllCharts(selectedQuarter);
-
-  d3.selectAll(".tab-button").on("click", function() {
-    d3.selectAll(".tab-button").classed("active", false);
+  updateCharts(selectedQuarter);
+  d3.selectAll(".quarter-btn").on("click", function () {
+    d3.selectAll(".quarter-btn").classed("active", false);
     d3.select(this).classed("active", true);
-    selectedQuarter = d3.select(this).attr("data-quarter");
-    updateAllCharts(selectedQuarter);
+    updateCharts(d3.select(this).attr("data-q"));
   });
 });
