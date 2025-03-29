@@ -1,4 +1,5 @@
 let currentQuarter = "Q1";
+let globalData = [];
 
 document.addEventListener("DOMContentLoaded", function () {
   d3.csv("cleaned.csv").then(data => {
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function init() {
-  // empty function for future setup if needed
+  // future setup if needed
 }
 
 function updateCharts(quarter) {
@@ -54,10 +55,48 @@ function drawBarChart(quarter) {
 }
 
 function drawMap(quarter) {
-  // You may reuse your existing topojson logic here, omitted for brevity
+  const col = "Quarterly Total_" + quarter;
+
+  const stateTotals = {};
+  globalData.forEach(d => {
+    if (!stateTotals[d.State]) stateTotals[d.State] = 0;
+    stateTotals[d.State] += +d[col];
+  });
+
   d3.select("#map").html("");
-  const svg = d3.select("#map").append("svg").attr("width", 800).attr("height", 500);
-  svg.append("text").attr("x", 100).attr("y", 100).text(`Map Visualization for ${quarter}`);
+  const svg = d3.select("#map").append("svg").attr("width", 960).attr("height", 600);
+  const projection = d3.geoAlbersUsa().translate([480, 300]).scale(1000);
+  const path = d3.geoPath().projection(projection);
+
+  const color = d3.scaleQuantize()
+    .domain([0, d3.max(Object.values(stateTotals))])
+    .range(d3.schemeBlues[9]);
+
+  d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
+    const idToState = {
+      "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA",
+      "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL",
+      "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN",
+      "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME",
+      "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS",
+      "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH",
+      "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND",
+      "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI",
+      "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT",
+      "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI",
+      "56": "WY"
+    };
+
+    svg.selectAll("path")
+      .data(topojson.feature(us, us.objects.states).features)
+      .join("path")
+      .attr("d", path)
+      .attr("fill", d => {
+        const state = idToState[d.id.toString().padStart(2, "0")];
+        return color(stateTotals[state] || 0);
+      })
+      .attr("stroke", "#fff");
+  });
 }
 
 function drawScatterPlot(quarter) {
@@ -88,7 +127,7 @@ function embedAltairScatter(quarter) {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     description: "Altair Scatter Plot",
     data: { url: "cleaned.csv" },
-    transform: [{ filter: `datum.State == 'CA'` }],
+    transform: [{ filter: "datum.State === 'CA'" }],
     mark: "point",
     encoding: {
       x: { field: `Dependent Students_${quarter}`, type: "quantitative" },
