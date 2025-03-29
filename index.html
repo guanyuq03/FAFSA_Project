@@ -2,99 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Data Visualization Project (No Forecast)</title>
+  <title>Introduction</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Data Visualization Project</h1>
+    <h1>Introduction</h1>
     <nav>
-      <a href="#introduction">Introduction</a>
-      <a href="#data-info">Data Information</a>
-      <a href="#visualization">Visualizations</a>
-      <a href="#conclusion">Conclusion</a>
+      <a href=" ">Home</a >
+      <a href="data_information.html">Data Information</a >
+      <a href="visualization.html">Visualizations</a >
+      <a href="conclusion.html">Conclusion</a >
     </nav>
   </header>
 
-  <section id="introduction">
+  <main>
     <h2>Introduction</h2>
     <p>
       This project explores our dataset (<em>cleaned.csv</em>) with multiple
       charts. We can switch among quarters (Q1..Q5) for selected charts, and we
       have an aggregated line chart and stacked bar chart for Q1..Q5.
-    </p>
-  </section>
+    </p >
+  
+  </main>
 
-  <section id="data-info">
-    <h2>Data Information</h2>
-    <p>
-      <strong>cleaned.csv</strong> includes columns like:
-      <code>OPE ID, School, State, Zip Code, School Type, Dependent Students_Q1, Independent Students_Q1, Quarterly Total_Q1, ...</code>
-      (and similar columns for Q2..Q5).
-    </p>
-    <ul>
-      <li><strong>Chart 1:</strong> Bar Chart – Top 10 schools by the selected quarter’s total.</li>
-      <li><strong>Chart 2:</strong> Line Chart – Aggregated totals for Q1..Q5.</li>
-      <li><strong>Chart 3:</strong> Scatter Plot – Dependent vs. Independent for selected quarter.</li>
-      <li><strong>Chart 4:</strong> Pie/Donut – School Type by selected quarter.</li>
-      <li><strong>Chart 5:</strong> Stacked Bar – Summed Dep vs. Ind for Q1..Q5.</li>
-      <li><strong>Chart 6:</strong> Map Visualization – By selected quarter’s total.</li>
-    </ul>
-  </section>
-
-  <section id="visualization">
-    <h2>Visualizations</h2>
-
-    <!-- Quarter Tabs -->
-    <div id="quarterTabs">
-      <button class="tab-button active" data-quarter="Q1">Q1</button>
-      <button class="tab-button" data-quarter="Q2">Q2</button>
-      <button class="tab-button" data-quarter="Q3">Q3</button>
-      <button class="tab-button" data-quarter="Q4">Q4</button>
-      <button class="tab-button" data-quarter="Q5">Q5</button>
-    </div>
-
-    <div class="viz-container">
-      <h3>Chart 1: Bar Chart (Top 10 Schools by Selected Quarter)</h3>
-      <div id="viz1"></div>
-    </div>
-
-    <div class="viz-container">
-      <h3>Chart 2: Line Chart (Aggregated Q1–Q5)</h3>
-      <div id="viz2"></div>
-    </div>
-
-    <div class="viz-container">
-      <h3>Chart 3: Scatter Plot (Dependent vs. Independent in Selected Quarter)</h3>
-      <div id="viz3"></div>
-    </div>
-
-    <div class="viz-container">
-      <h3>Chart 4: Pie/Donut (School Type by Selected Quarter)</h3>
-      <div id="viz4"></div>
-    </div>
-
-    <div class="viz-container">
-      <h3>Chart 5: Stacked Bar Chart (Dep vs. Ind for Q1..Q5)</h3>
-      <div id="viz5"></div>
-    </div>
-    
-    <div class="viz-container">
-      <h3>Chart 6: Map Visualization (Selected Quarter Total by State)</h3>
-      <div id="viz6"></div>
-    </div>
-  </section>
-
-  <section id="conclusion">
-    <h2>Conclusion</h2>
-    <p>
-      This version does not incorporate forecast data, focusing solely on
-      <em>cleaned.csv</em>. We can switch quarters for bar, scatter, pie, and
-      map charts, plus view aggregated line and stacked bar charts.
-    </p>
-  </section>
-
-  <!-- D3 & TopoJSON & Our JS -->
+  <!-- Link JavaScript file -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/topojson-client@3"></script>
   <script src="visualize.js"></script>
