@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FAFSA Application Trends and Institutional Factors</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -29,14 +28,12 @@
 
     <h2>FAFSA Applications by State (Map)</h2>
     <div id="map"></div>
+    <div id="color-legend"></div>
 
-    <h2>Dependent vs. Independent Applicants</h2>
+    <h2>Dependent vs. Independent Applicants (D3 + Brushing)</h2>
     <div id="scatter-plot"></div>
 
     <h2>Institutional Applicants by State (Altair Scatter)</h2>
-    <label for="cutoffSlider">Cutoff for Quarterly Total:</label>
-    <input type="range" id="cutoffSlider" min="0" max="5000" value="0" step="100">
-    <span id="cutoffValue">0</span>
     <div id="altair-scatter"></div>
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
