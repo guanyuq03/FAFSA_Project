@@ -1,16 +1,17 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fa;
   margin: 0;
-  padding: 0;
-  color: #333;
+  padding: 20px;
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1100px;
+  margin: auto;
+  background: white;
   padding: 30px;
-  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -20,49 +21,33 @@ h1 {
 
 .tabs {
   text-align: center;
-  margin-bottom: 30px;
+  margin: 20px 0;
 }
 
 .tab-button {
-  background-color: #e0e0e0;
-  border: none;
-  color: #333;
-  padding: 10px 16px;
-  margin: 5px;
-  font-size: 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  margin: 0 4px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
 }
 
 .tab-button.active {
-  background-color: #2c3e50;
+  background-color: #007bff;
   color: white;
-}
-
-h2 {
-  color: #2c3e50;
-  margin-top: 40px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-#bar-chart,
-#map,
-#scatter-plot,
-#altair-scatter,
-#altair-histogram {
-  margin: 0 auto 50px auto;
-  width: 90%;
-  max-width: 900px;
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 }
 
 svg {
-  width: 100%;
-  height: auto;
-  display: block;
+  font: 10px sans-serif;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: rgba(0,0,0,0.75);
+  color: white;
+  padding: 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
 }
