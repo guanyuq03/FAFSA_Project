@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Data Information</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Visualization</h1>
+    <nav>
+        <a href=" ">Home</a >
+        <a href="Data_Information.html">Data Information</a >
+        <a href="Visualizations.html">Visualizations</a >
+        <a href="Conclusion.html">Conclusion</a >
+    </nav>
+  </header>
+
+  <main>
+    <h2>Visualizations</h2>
+
+    <!-- Quarter Tabs -->
+    <div id="quarterTabs">
+      <button class="tab-button active" data-quarter="Q1">Q1</button>
+      <button class="tab-button" data-quarter="Q2">Q2</button>
+      <button class="tab-button" data-quarter="Q3">Q3</button>
+      <button class="tab-button" data-quarter="Q4">Q4</button>
+      <button class="tab-button" data-quarter="Q5">Q5</button>
+    </div>
+
+    <div class="viz-container">
+      <h3>Chart 1: Bar Chart (Top 10 Schools by Selected Quarter)</h3>
+      <div id="viz1"></div>
+    </div>
+
+    <div class="viz-container">
+      <h3>Chart 2: Line Chart (Aggregated Q1–Q5)</h3>
+      <div id="viz2"></div>
+    </div>
+
+    <div class="viz-container">
+      <h3>Chart 3: Scatter Plot (Dependent vs. Independent in Selected Quarter)</h3>
+      <div id="viz3"></div>
+    </div>
+
+    <div class="viz-container">
+      <h3>Chart 4: Pie/Donut (School Type by Selected Quarter)</h3>
+      <div id="viz4"></div>
+    </div>
+
+    <div class="viz-container">
+      <h3>Chart 5: Stacked Bar Chart (Dep vs. Ind for Q1..Q5)</h3>
+      <div id="viz5"></div>
+    </div>
+    
+    <div class="viz-container">
+      <h3>Chart 6: Map Visualization (Selected Quarter Total by State)</h3>
+      <div id="viz6"></div>
+    </div>
+  </section>
+
+  </main>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+  <script src="visualize.js"></script>
+</body>
+</html>
