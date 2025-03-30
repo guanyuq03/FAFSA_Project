@@ -2,12 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Introduction</title>
+  <title>Group 4: FAFSA Analysis</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .team-members {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+    .member {
+      text-align: center;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      width: 30%;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #f0f0f0;
+      margin-top: 30px;
+    }
+    .email-list {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Introduction</h1>
+    <h1>Group 4: Guanyu Qu, Yuetong Yin, Meixu Chen</h1>
     <nav>
       <a href="index.html">Home</a>
       <a href="data_information.html">Data Information</a>
@@ -22,6 +48,18 @@
       The Free Application for Federal Student Aid (FAFSA) plays a critical role in determining the financial aid that millions of students receive annually. Analyzing FAFSA application trends provides valuable insights into socioeconomic patterns, accessibility to higher education, and institutional impacts. This study is important because it sheds light on how financial aid availability affects students' educational opportunities, particularly for underrepresented groups. It is also interesting as it explores the dynamic relationship between institutional policies and student financial behaviors, offering a comprehensive view of higher education financing.
     </p>
     
+    <div class="team-members">
+      <div class="member">
+        <h3>Guanyu Qu</h3>
+      </div>
+      <div class="member">
+        <h3>Yuetong Yin</h3>
+      </div>
+      <div class="member">
+        <h3>Meixu Chen</h3>
+      </div>
+    </div>
+    
     <p>
       This project explores our dataset (<em>cleaned.csv</em>) with multiple
       charts. We can switch among quarters (Q1..Q5) for selected charts, and we
@@ -32,6 +70,15 @@
       This analysis examines quarterly enrollment trends (Q1-Q5) across 1,271 U.S. educational institutions in different states. The dataset compares dependent and independent student enrollment patterns at public, private, and proprietary schools, identified by OPE ID, name, location, and type. The cleaned and standardized data enables deeper investigation of seasonal enrollment impacts, financial aid policy effects on student dependency ratios, and regional education disparities. These insights support policymaking, academic research, and institutional planning by revealing comparative enrollment trends and enabling predictive modeling. The preprocessing work established a strong foundation for robust statistical analysis of these educational patterns.
     </p>
   </main>
+
+  <footer>
+    <h3>Contact Information</h3>
+    <div class="email-list">
+      <div>Yuetong Yin: <a href="mailto:yin.yuet@northeastern.edu">yin.yuet@northeastern.edu</a></div>
+      <div>Guanyu Qu: <a href="mailto:qu.gu@northeastern.edu">qu.gu@northeastern.edu</a></div>
+      <div>Meixu Chen: <a href="mailto:chen.meixu@northeastern.edu">chen.meixu@northeastern.edu</a></div>
+    </div>
+  </footer>
 
   <!-- Link JavaScript file -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
