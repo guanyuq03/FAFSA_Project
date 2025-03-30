@@ -113,11 +113,19 @@ function drawMapPlotly(quarter) {
 }
 
 function embedAltairScatter(quarter) {
+  const cutoff = +document.getElementById("cutoffRange").value;
+  document.getElementById("cutoffValue").textContent = cutoff;
+
+  const field = `Quarterly Total_${quarter}`;
+
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-    description: "Altair Scatter Plot",
+    description: "Altair Scatter Plot with Cutoff",
     data: { url: "cleaned.csv" },
-    transform: [{ filter: `datum.State == 'CA'` }],
+    transform: [
+      { filter: `datum.State == 'CA'` },
+      { filter: `datum["${field}"] >= ${cutoff}` }
+    ],
     mark: "point",
     encoding: {
       x: { field: `Dependent Students_${quarter}`, type: "quantitative" },
@@ -125,8 +133,10 @@ function embedAltairScatter(quarter) {
       tooltip: [{ field: "School", type: "nominal" }]
     }
   };
+
   vegaEmbed("#altair-scatter", chart, { actions: false });
 }
+
 
 function embedAltairHistogram(quarter) {
   const chart = {
