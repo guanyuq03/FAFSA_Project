@@ -24,15 +24,6 @@
       <button class="tab-button" data-quarter="Q5">Q5</button>
     </div>
 
-    <div class="control-row">
-      <label for="stateDropdown">Select State:</label>
-      <select id="stateDropdown"></select>
-
-      <label for="cutoffRange">Cutoff:</label>
-      <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="0">
-      <span id="cutoffValue">0</span>
-    </div>
-
     <h2>Top 10 Institutions by FAFSA Applications</h2>
     <div id="bar-chart"></div>
 
@@ -41,9 +32,18 @@
 
     <h2>Dependent vs. Independent Applicants</h2>
     <div id="scatter-plot"></div>
+    <div class="control-row">
+      <label for="stateDropdown">Select State:</label>
+      <select id="stateDropdown"></select>
+    </div>
 
     <h2>Institutional Applicants by State (Altair Scatter)</h2>
     <div id="altair-scatter"></div>
+    <div class="control-row">
+      <label for="cutoffRange">Cutoff:</label>
+      <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="0">
+      <span id="cutoffValue">0</span>
+    </div>
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
     <div id="altair-histogram"></div>
