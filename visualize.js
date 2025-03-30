@@ -58,19 +58,47 @@ function populateStateDropdown() {
 function drawBarChart(quarter) {
   const col = "Quarterly Total_" + quarter;
   const data = globalData
-    .filter(d => d[col])
+    .filter(d => d[col] && !isNaN(+d[col])) // Filter out missing or non-numeric values
     .sort((a, b) => +b[col] - +a[col])
     .slice(0, 10);
 
-  d3.select("#bar-chart").html("");
-  const svg = d3.select("#bar-chart").append("svg").attr("width", 800).attr("height", 400);
+  d3.select("#bar-chart").html(""); // Clear previous chart
+  const svg = d3.select("#bar-chart")
+    .append("svg")
+    .attr("width", 800)
+    .attr("height", 400);
 
-  const x = d3.scaleBand().domain(data.map(d => d.School)).range([60, 750]).padding(0.3);
-  const y = d3.scaleLinear().domain([0, d3.max(data, d => +d[col])]).range([350, 50]);
+  const x = d3.scaleBand()
+    .domain(data.map(d => d.School))
+    .range([60, 750])
+    .padding(0.3);
 
-  svg.append("g").attr("transform", "translate(0,350)").call(d3.axisBottom(x)).selectAll("text")
-    .attr("transform", "rotate(-40)").style("text-anchor", "end");
-  svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => +d[col])])
+    .range([350, 50]);
+
+  svg.append("g")
+    .attr("transform", "translate(0,350)")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "rotate(-40)")
+    .style("text-anchor", "end");
+
+  svg.append("g")
+    .attr("transform", "translate(60,0)")
+    .call(d3.axisLeft(y));
+
+  // Tooltip container
+  const tooltip = d3.select("#bar-chart")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0)
+    .style("position", "absolute")
+    .style("background-color", "white")
+    .style("border", "1px solid #ccc")
+    .style("padding", "6px")
+    .style("border-radius", "4px")
+    .style("pointer-events", "none");
 
   svg.selectAll("rect")
     .data(data)
@@ -81,21 +109,24 @@ function drawBarChart(quarter) {
     .attr("height", d => 350 - y(+d[col]))
     .attr("fill", "#69b3a2")
     .on("mouseover", function (event, d) {
-      d3.select(this).attr("fill", "#4682b4"); // highlight
-      tooltip.transition().duration(100).style("opacity", 1);
-      tooltip.html(`${d.School} : ${d[col]}`)
+      d3.select(this).attr("fill", "#4682B4");
+      tooltip
+        .style("opacity", 1)
+        .html(`<strong>${d.School}</strong><br/>${+d[col]} applications`)
         .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 20) + "px");
+        .style("top", (event.pageY - 28) + "px");
     })
     .on("mousemove", function (event) {
-      tooltip.style("left", (event.pageX + 10) + "px")
-             .style("top", (event.pageY - 20) + "px");
+      tooltip
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 28) + "px");
     })
     .on("mouseout", function () {
       d3.select(this).attr("fill", "#69b3a2");
-      tooltip.transition().duration(200).style("opacity", 0);
+      tooltip.style("opacity", 0);
     });
 }
+
 
 function drawScatterPlot(quarter) {
   const depCol = "Dependent Students_" + quarter;
