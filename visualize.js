@@ -4,9 +4,18 @@ let globalData = [];
 document.addEventListener("DOMContentLoaded", function () {
   d3.csv("cleaned.csv").then(data => {
     globalData = data;
-    populateStateDropdown(data);
+    populateStateDropdown();
     init();
     updateCharts(currentQuarter);
+  });
+
+  document.getElementById("cutoffRange").addEventListener("input", function () {
+    document.getElementById("cutoffValue").textContent = this.value;
+    embedAltairScatter(currentQuarter);
+  });
+
+  document.getElementById("stateDropdown").addEventListener("change", function () {
+    embedAltairScatter(currentQuarter);
   });
 
   document.querySelectorAll(".tab-button").forEach(button => {
@@ -17,24 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
       updateCharts(currentQuarter);
     });
   });
-
-  document.getElementById("cutoffRange").addEventListener("input", function () {
-    document.getElementById("cutoffValue").textContent = this.value;
-    embedAltairScatter(currentQuarter);
-  });
-
-  document.getElementById("stateDropdown").addEventListener("change", function () {
-    drawScatterPlot(currentQuarter);
-  });
 });
 
-function populateStateDropdown(data) {
+function populateStateDropdown() {
+  const uniqueStates = Array.from(new Set(globalData.map(d => d.State).filter(s => s)));
+  uniqueStates.sort();
   const dropdown = document.getElementById("stateDropdown");
-  const states = [...new Set(data.map(d => d.State))].sort();
-  states.forEach(state => {
+
+  uniqueStates.forEach(state => {
     const option = document.createElement("option");
     option.value = state;
-    option.textContent = state;
+    option.text = state;
     dropdown.appendChild(option);
   });
 }
@@ -51,8 +53,9 @@ function updateCharts(quarter) {
 
 function drawBarChart(quarter) {
   const col = "Quarterly Total_" + quarter;
+
   const data = globalData
-    .filter(d => d[col])
+    .filter(d => !isNaN(+d[col])) // ensure valid number
     .sort((a, b) => +b[col] - +a[col])
     .slice(0, 10);
 
@@ -62,16 +65,18 @@ function drawBarChart(quarter) {
   const x = d3.scaleBand().domain(data.map(d => d.School)).range([60, 750]).padding(0.3);
   const y = d3.scaleLinear().domain([0, d3.max(data, d => +d[col])]).range([350, 50]);
 
-  svg.append("g").attr("transform", "translate(0,350)").call(d3.axisBottom(x)).selectAll("text")
-    .attr("transform", "rotate(-40)").style("text-anchor", "end");
+  svg.append("g")
+    .attr("transform", "translate(0,350)")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "rotate(-40)")
+    .style("text-anchor", "end");
 
   svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
 
-  const tooltip = svg.append("text")
-    .attr("class", "label")
-    .attr("x", 400)
-    .attr("y", 30)
-    .style("text-anchor", "middle");
+  const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
   svg.selectAll("rect")
     .data(data)
@@ -82,20 +87,22 @@ function drawBarChart(quarter) {
     .attr("height", d => 350 - y(+d[col]))
     .attr("fill", "#69b3a2")
     .on("mouseover", function (event, d) {
-      d3.select(this).attr("fill", "steelblue");
-      tooltip.text(`${d.School} : ${+d[col]}`);
+      d3.select(this).attr("fill", "#377eb8");
+      tooltip.transition().duration(200).style("opacity", .9);
+      tooltip.html(`${d.School} : ${d[col]}`)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 20) + "px");
     })
     .on("mouseout", function () {
       d3.select(this).attr("fill", "#69b3a2");
-      tooltip.text("");
+      tooltip.transition().duration(500).style("opacity", 0);
     });
 }
 
 function drawScatterPlot(quarter) {
   const depCol = "Dependent Students_" + quarter;
   const indCol = "Independent Students_" + quarter;
-  const selectedState = document.getElementById("stateDropdown").value;
-  const data = globalData.filter(d => d[depCol] && d[indCol] && d.State === selectedState);
+  const data = globalData.filter(d => !isNaN(+d[depCol]) && !isNaN(+d[indCol]));
 
   d3.select("#scatter-plot").html("");
   const svg = d3.select("#scatter-plot").append("svg").attr("width", 800).attr("height", 400);
@@ -105,6 +112,20 @@ function drawScatterPlot(quarter) {
 
   svg.append("g").attr("transform", "translate(0,350)").call(d3.axisBottom(x));
   svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
+
+  const brush = d3.brush()
+    .extent([[60, 50], [750, 350]])
+    .on("end", function ({ selection }) {
+      if (!selection) return;
+      const [[x0, y0], [x1, y1]] = selection;
+      svg.selectAll("circle").attr("fill", d => {
+        const cx = x(+d[depCol]);
+        const cy = y(+d[indCol]);
+        return (cx >= x0 && cx <= x1 && cy >= y0 && cy <= y1) ? "orange" : "#1f77b4";
+      });
+    });
+
+  svg.append("g").call(brush);
 
   svg.selectAll("circle")
     .data(data)
@@ -117,6 +138,7 @@ function drawScatterPlot(quarter) {
 
 function drawMapPlotly(quarter) {
   const col = "Quarterly Total_" + quarter;
+
   const stateData = {};
   globalData.forEach(d => {
     const state = d.State;
@@ -133,12 +155,16 @@ function drawMapPlotly(quarter) {
     locations: states,
     z: values,
     colorscale: 'Blues',
-    colorbar: { title: `${quarter} Total` }
+    colorbar: {
+      title: `${quarter} Total`,
+    },
   }];
 
   const layout = {
-    geo: { scope: 'usa' },
-    margin: { t: 0, b: 0 }
+    geo: {
+      scope: 'usa',
+    },
+    margin: { t: 0, b: 0 },
   };
 
   Plotly.newPlot('map', data, layout);
@@ -146,14 +172,17 @@ function drawMapPlotly(quarter) {
 
 function embedAltairScatter(quarter) {
   const cutoff = +document.getElementById("cutoffRange").value;
+  const selectedState = document.getElementById("stateDropdown").value;
+  document.getElementById("cutoffValue").textContent = cutoff;
+
   const field = `Quarterly Total_${quarter}`;
 
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-    description: "Altair Scatter with Cutoff",
+    description: "Altair Scatter Plot with Cutoff and State Filter",
     data: { url: "cleaned.csv" },
     transform: [
-      { filter: `datum.State == 'CA'` },
+      { filter: `datum.State == '${selectedState}'` },
       { filter: `datum["${field}"] >= ${cutoff}` }
     ],
     mark: "point",
@@ -183,6 +212,5 @@ function embedAltairHistogram(quarter) {
       y: { aggregate: "count", type: "quantitative" }
     }
   };
-
   vegaEmbed("#altair-histogram", chart, { actions: false });
 }
