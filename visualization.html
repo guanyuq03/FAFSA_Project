@@ -42,18 +42,17 @@
 
     <h2>Dependent vs. Independent Applicants</h2>
     <div id="scatter-plot"></div>
+
+    <h2>Institutional Applicants with Cutoff (Altair Scatter)</h2>
     <div class="controls">
       <label for="stateDropdown">Select State:</label>
       <select id="stateDropdown"></select>
-    </div>
 
-    <h2>Institutional Applicants by State (Altair Scatter)</h2>
-    <div id="altair-scatter"></div>
-    <div class="controls">
       <label for="cutoffRange">Cutoff:</label>
-      <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="500">
+      <input type="range" id="cutoffRange" min="0" max="2000" step="10" value="500">
       <span id="cutoffValue">500</span>
     </div>
+    <div id="altair-scatter"></div>
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
     <div id="altair-histogram"></div>
