@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAFSA Application Trends and Institutional Factors</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>FAFSA Application Trends Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -32,17 +32,16 @@
 
     <h2>Dependent vs. Independent Applicants</h2>
     <div id="scatter-plot"></div>
-    <div class="control-row">
-      <label for="stateDropdown">Select State:</label>
-      <select id="stateDropdown"></select>
-    </div>
 
     <h2>Institutional Applicants by State (Altair Scatter)</h2>
     <div id="altair-scatter"></div>
-    <div class="control-row">
+    <div class="controls">
+      <label for="stateDropdown">Select State:</label>
+      <select id="stateDropdown"></select>
+
       <label for="cutoffRange">Cutoff:</label>
-      <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="0">
-      <span id="cutoffValue">0</span>
+      <input type="range" id="cutoffRange" min="0" max="2000" step="10" value="500">
+      <span id="cutoffValue">500</span>
     </div>
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
