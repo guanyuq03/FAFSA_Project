@@ -36,9 +36,15 @@
 
     <h2>Top 10 Institutions by FAFSA Applications</h2>
     <div id="bar-chart"></div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> This bar chart highlights the top 10 institutions with the highest FAFSA applications. Most are large public universities, suggesting their scale and accessibility play a major role in financial aid demand.
+    </p>
 
     <h2>FAFSA Applications by State (Map)</h2>
     <div id="map"></div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> The map visualizes FAFSA totals by state. States with larger populations—such as California, Texas, and New York—stand out, reflecting both demographic size and institutional reach.
+    </p>
 
     <h2>Dependent vs. Independent Applicants</h2>
     <div id="scatter-plot"></div>
@@ -46,6 +52,9 @@
       <label for="stateDropdown">Select State:</label>
       <select id="stateDropdown"></select>
     </div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> This scatter plot compares dependent and independent student applicants. It reveals differences in student populations served by each institution and lets users filter by state for localized insights.
+    </p>
 
     <h2>Institutional Applicants by CutOff (Altair Scatter)</h2>
     <div id="altair-scatter"></div>
@@ -54,9 +63,15 @@
       <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="500">
       <span id="cutoffValue">500</span>
     </div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> This interactive scatter plot uses a cutoff slider to filter schools based on application volume. It provides a focused view of how FAFSA submissions differ across institutions with varying student profiles.
+    </p>
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
     <div id="altair-histogram"></div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> The histogram shows how FAFSA applications are distributed across schools. Most institutions receive fewer applications, while a small group has significantly higher totals, indicating a skewed distribution.
+    </p>
   </div>
 
   <script src="visualize.js"></script>
