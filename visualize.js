@@ -53,17 +53,24 @@ function updateCharts(quarter) {
 
 function drawBarChart(quarter) {
   const col = "Quarterly Total_" + quarter;
-
   const data = globalData
-    .filter(d => !isNaN(+d[col])) // ensure valid number
+    .filter(d => d[col] && !isNaN(+d[col]))  // Ensure numeric
     .sort((a, b) => +b[col] - +a[col])
     .slice(0, 10);
 
   d3.select("#bar-chart").html("");
-  const svg = d3.select("#bar-chart").append("svg").attr("width", 800).attr("height", 400);
+  const svg = d3.select("#bar-chart").append("svg")
+    .attr("width", 800)
+    .attr("height", 400);
 
-  const x = d3.scaleBand().domain(data.map(d => d.School)).range([60, 750]).padding(0.3);
-  const y = d3.scaleLinear().domain([0, d3.max(data, d => +d[col])]).range([350, 50]);
+  const x = d3.scaleBand()
+    .domain(data.map(d => d.School))
+    .range([60, 750])
+    .padding(0.3);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => +d[col])])
+    .range([350, 50]);
 
   svg.append("g")
     .attr("transform", "translate(0,350)")
@@ -72,11 +79,9 @@ function drawBarChart(quarter) {
     .attr("transform", "rotate(-40)")
     .style("text-anchor", "end");
 
-  svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
-
-  const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+  svg.append("g")
+    .attr("transform", "translate(60,0)")
+    .call(d3.axisLeft(y));
 
   svg.selectAll("rect")
     .data(data)
@@ -86,17 +91,14 @@ function drawBarChart(quarter) {
     .attr("width", x.bandwidth())
     .attr("height", d => 350 - y(+d[col]))
     .attr("fill", "#69b3a2")
-    .on("mouseover", function (event, d) {
-      d3.select(this).attr("fill", "#377eb8");
-      tooltip.transition().duration(200).style("opacity", .9);
-      tooltip.html(`${d.School} : ${d[col]}`)
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 20) + "px");
+    .on("mouseover", function () {
+      d3.select(this).attr("fill", "#1f77b4");
     })
     .on("mouseout", function () {
       d3.select(this).attr("fill", "#69b3a2");
-      tooltip.transition().duration(500).style("opacity", 0);
-    });
+    })
+    .append("title")
+    .text(d => `${d.School}: ${d[col]}`);
 }
 
 function drawScatterPlot(quarter) {
