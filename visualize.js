@@ -72,7 +72,7 @@ function drawBarChart(quarter) {
     .attr("transform", "rotate(-40)").style("text-anchor", "end");
   svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
 
-  svg.selectAll("rect")
+  const bars = svg.selectAll("rect")
     .data(data)
     .join("rect")
     .attr("x", d => x(d.School))
@@ -81,7 +81,7 @@ function drawBarChart(quarter) {
     .attr("height", d => 350 - y(+d[col]))
     .attr("fill", "#69b3a2")
     .on("mouseover", function (event, d) {
-      d3.select(this).attr("fill", "#4682b4"); // highlight
+      d3.select(this).attr("fill", "#4682b4");
       tooltip.transition().duration(100).style("opacity", 1);
       tooltip.html(`${d.School} : ${d[col]}`)
         .style("left", (event.pageX + 10) + "px")
@@ -94,8 +94,23 @@ function drawBarChart(quarter) {
     .on("mouseout", function () {
       d3.select(this).attr("fill", "#69b3a2");
       tooltip.transition().duration(200).style("opacity", 0);
+    })
+    .on("click", function (event, d) {
+      // Remove existing label
+      svg.selectAll(".bar-label").remove();
+
+      // Add new label
+      svg.append("text")
+        .attr("class", "bar-label")
+        .attr("x", x(d.School) + x.bandwidth() / 2)
+        .attr("y", y(+d[col]) - 10)
+        .attr("text-anchor", "middle")
+        .attr("fill", "black")
+        .attr("font-weight", "bold")
+        .text(`${d.School} : ${d[col]}`);
     });
 }
+
 
 function drawScatterPlot(quarter) {
   const depCol = "Dependent Students_" + quarter;
