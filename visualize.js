@@ -31,16 +31,27 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function populateStateDropdown() {
-  const dropdown = document.getElementById("stateDropdown");
-  const states = Array.from(new Set(globalData.map(d => d.State))).sort();
-  dropdown.innerHTML = '<option value="ALL">ALL</option>';
-  states.forEach(state => {
+  const stateDropdown = document.getElementById("stateDropdown");
+  const uniqueStates = Array.from(new Set(globalData.map(d => d.State.trim()).filter(d => d !== "")));
+
+  // Clear existing options
+  stateDropdown.innerHTML = "";
+
+  // Add 'ALL' option
+  const allOption = document.createElement("option");
+  allOption.value = "ALL";
+  allOption.textContent = "ALL";
+  stateDropdown.appendChild(allOption);
+
+  // Add state options
+  uniqueStates.sort().forEach(state => {
     const option = document.createElement("option");
     option.value = state;
     option.textContent = state;
-    dropdown.appendChild(option);
+    stateDropdown.appendChild(option);
   });
 }
+
 
 function init() {}
 
