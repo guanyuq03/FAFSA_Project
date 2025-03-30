@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("stateDropdown").addEventListener("change", function () {
-    embedAltairScatter(currentQuarter);
+    updateCharts(currentQuarter);
   });
 
   document.querySelectorAll(".tab-button").forEach(button => {
