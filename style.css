@@ -1,66 +1,127 @@
-body {
-  font-family: Arial, sans-serif;
+* {
   margin: 0;
   padding: 0;
-  background: #fff;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f4f8;
   color: #333;
+  line-height: 1.6;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
 }
 
 header {
-  background: #f8f8f8;
-  padding: 1rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
+  background: linear-gradient(135deg, #007acc, #00b4d8);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  margin-bottom: 30px;
+  border-radius: 8px;
 }
 
 header h1 {
-  margin-bottom: 0.5rem;
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+nav {
+  margin-top: 10px;
 }
 
 nav a {
-  margin-right: 15px;
+  margin: 0 15px;
+  color: #fff;
   text-decoration: none;
-  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 nav a:hover {
-  text-decoration: underline;
+  color: #ffd700;
 }
 
 .container {
-  padding: 2rem;
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 h2 {
   margin-top: 2rem;
-  color: #222;
+  margin-bottom: 0.5rem;
+  color: #007acc;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 5px;
 }
 
 .tabs {
-  margin: 1rem 0;
+  text-align: center;
+  margin: 20px 0;
 }
 
 .tab-button {
-  padding: 8px 16px;
-  margin-right: 6px;
+  padding: 10px 20px;
+  margin: 0 5px;
   border: none;
-  background-color: #eee;
+  background: #007acc;
+  color: #fff;
   cursor: pointer;
-  font-weight: bold;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background 0.3s ease;
 }
 
+.tab-button:hover,
 .tab-button.active {
-  background-color: #4CAF50;
-  color: white;
+  background: #005fa3;
 }
 
 .controls {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 1rem 0 2rem;
+  align-items: center;
 }
 
 .controls label {
-  margin-right: 10px;
   font-weight: bold;
+  margin-right: 5px;
+}
+
+.controls select,
+.controls input[type="range"] {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.chart-svg {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.tooltip {
+  position: absolute;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  border-radius: 4px;
+  pointer-events: none;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.legend {
+  font-size: 12px;
+  fill: #333;
 }
