@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Introduction</title>
+  <title>Conclusion</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -18,19 +18,23 @@
 
   <main>
     <section id="conclusion">
-        <h2>Conclusion</h2>
-        <p>
-          This version does not incorporate forecast data, focusing solely on
-          <em>cleaned.csv</em>. We can switch quarters for bar, scatter, pie, and
-          map charts, plus view aggregated line and stacked bar charts.
-        </p >
-      </section>
+      <h2>Summary of Findings</h2>
+      <p>
+        Through the FAFSA data visualizations, we uncovered meaningful insights into national financial aid application trends across institutions and states. The Top 10 Institutions bar chart highlighted that large public universities such as those in California and Texas consistently receive the highest volume of FAFSA applications. The choropleth map further revealed strong geographic disparities—states with higher populations or more accessible public education systems tend to show greater FAFSA participation. The dependent vs. independent scatter plot illustrates that the majority of applicants are dependent students, but certain schools cater more to independent populations, possibly reflecting non-traditional or older student bodies.
+      </p>
+      <p>
+        The Altair scatter plot with cutoff and state filters enabled a closer look at high-volume institutions and demographic patterns within individual states. Meanwhile, the histogram showed that while a few institutions receive very large numbers of applications, most schools handle far fewer, highlighting an uneven distribution of aid applications.
+      </p>
+      <p>
+        From these findings, we learned how demographic and regional factors influence FAFSA behavior. In the future, this dashboard could be expanded by integrating data on actual aid awarded, graduation rates, or tuition costs. Additionally, temporal analysis across multiple years would help track the impact of policy changes or economic conditions on FAFSA submissions. This project offers a foundation for broader educational equity analysis.
+      </p>
+    </section>
   </main>
 
-  <!-- Link JavaScript file -->
+  <!-- Optional JS scripts if needed -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/topojson-client@3"></script>
   <script src="visualize.js"></script>
-  
+
 </body>
 </html>
