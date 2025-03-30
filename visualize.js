@@ -1,13 +1,21 @@
 let currentQuarter = "Q1";
 let globalData = [];
-let selectedBar = null;
-let selectedState = "All";
 
 document.addEventListener("DOMContentLoaded", function () {
   d3.csv("cleaned.csv").then(data => {
     globalData = data;
+    populateStateDropdown(); // New
     init();
     updateCharts(currentQuarter);
+  });
+
+  document.getElementById("cutoffRange").addEventListener("input", function () {
+    document.getElementById("cutoffValue").textContent = this.value;
+    embedAltairScatter(currentQuarter); // Re-render Altair scatter on cutoff change
+  });
+
+  document.getElementById("stateDropdown").addEventListener("change", function () {
+    drawScatterPlot(currentQuarter);
   });
 
   document.querySelectorAll(".tab-button").forEach(button => {
@@ -18,28 +26,15 @@ document.addEventListener("DOMContentLoaded", function () {
       updateCharts(currentQuarter);
     });
   });
-
-  document.getElementById("cutoffRange").addEventListener("input", function () {
-    document.getElementById("cutoffValue").textContent = this.value;
-    embedAltairScatter(currentQuarter);
-  });
 });
 
-function init() {
-  const states = [...new Set(globalData.map(d => d.State))].sort();
-  d3.select("#scatter-plot")
-    .insert("select", ":first-child")
-    .attr("id", "state-selector")
-    .on("change", function () {
-      selectedState = this.value;
-      updateCharts(currentQuarter);
-    })
-    .selectAll("option")
-    .data(["All", ...states])
-    .join("option")
-    .attr("value", d => d)
-    .text(d => d);
-}
+// Tooltip div
+const tooltip = d3.select("body")
+  .append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
+
+function init() {}
 
 function updateCharts(quarter) {
   drawBarChart(quarter);
@@ -47,6 +42,17 @@ function updateCharts(quarter) {
   drawMapPlotly(quarter);
   embedAltairScatter(quarter);
   embedAltairHistogram(quarter);
+}
+
+function populateStateDropdown() {
+  const states = [...new Set(globalData.map(d => d.State))].sort();
+  const select = document.getElementById("stateDropdown");
+  states.forEach(state => {
+    const option = document.createElement("option");
+    option.value = state;
+    option.text = state;
+    select.appendChild(option);
+  });
 }
 
 function drawBarChart(quarter) {
@@ -73,38 +79,41 @@ function drawBarChart(quarter) {
     .attr("y", d => y(+d[col]))
     .attr("width", x.bandwidth())
     .attr("height", d => 350 - y(+d[col]))
-    .attr("fill", d => selectedBar === d.School ? "#e74c3c" : "#69b3a2")
+    .attr("fill", "#69b3a2")
     .on("mouseover", function (event, d) {
-      d3.select(this).attr("fill", "#3498db");
+      d3.select(this).attr("fill", "#4682b4"); // highlight
+      tooltip.transition().duration(100).style("opacity", 1);
+      tooltip.html(`${d.School} : ${d[col]}`)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 20) + "px");
     })
-    .on("mouseout", function (event, d) {
-      d3.select(this).attr("fill", selectedBar === d.School ? "#e74c3c" : "#69b3a2");
+    .on("mousemove", function (event) {
+      tooltip.style("left", (event.pageX + 10) + "px")
+             .style("top", (event.pageY - 20) + "px");
     })
-    .on("click", function (event, d) {
-      selectedBar = selectedBar === d.School ? null : d.School;
-      updateCharts(currentQuarter);
+    .on("mouseout", function () {
+      d3.select(this).attr("fill", "#69b3a2");
+      tooltip.transition().duration(200).style("opacity", 0);
     });
 }
 
 function drawScatterPlot(quarter) {
   const depCol = "Dependent Students_" + quarter;
   const indCol = "Independent Students_" + quarter;
+  const selectedState = document.getElementById("stateDropdown").value;
+  const data = globalData.filter(d => d[depCol] && d[indCol] && d.State === selectedState);
 
-  const filteredData = selectedState === "All"
-    ? globalData.filter(d => d[depCol] && d[indCol])
-    : globalData.filter(d => d[depCol] && d[indCol] && d.State === selectedState);
-
-  d3.select("#scatter-plot").select("svg").remove();
+  d3.select("#scatter-plot").html("");
   const svg = d3.select("#scatter-plot").append("svg").attr("width", 800).attr("height", 400);
 
-  const x = d3.scaleLinear().domain([0, d3.max(filteredData, d => +d[depCol])]).range([60, 750]);
-  const y = d3.scaleLinear().domain([0, d3.max(filteredData, d => +d[indCol])]).range([350, 50]);
+  const x = d3.scaleLinear().domain([0, d3.max(data, d => +d[depCol])]).range([60, 750]);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d => +d[indCol])]).range([350, 50]);
 
   svg.append("g").attr("transform", "translate(0,350)").call(d3.axisBottom(x));
   svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
 
   svg.selectAll("circle")
-    .data(filteredData)
+    .data(data)
     .join("circle")
     .attr("cx", d => x(+d[depCol]))
     .attr("cy", d => y(+d[indCol]))
@@ -114,6 +123,7 @@ function drawScatterPlot(quarter) {
 
 function drawMapPlotly(quarter) {
   const col = "Quarterly Total_" + quarter;
+
   const stateData = {};
   globalData.forEach(d => {
     const state = d.State;
@@ -130,12 +140,16 @@ function drawMapPlotly(quarter) {
     locations: states,
     z: values,
     colorscale: 'Blues',
-    colorbar: { title: `${quarter} Total` }
+    colorbar: {
+      title: `${quarter} Total`,
+    },
   }];
 
   const layout = {
-    geo: { scope: 'usa' },
-    margin: { t: 0, b: 0 }
+    geo: {
+      scope: 'usa',
+    },
+    margin: { t: 0, b: 0 },
   };
 
   Plotly.newPlot('map', data, layout);
@@ -146,8 +160,10 @@ function embedAltairScatter(quarter) {
   document.getElementById("cutoffValue").textContent = cutoff;
 
   const field = `Quarterly Total_${quarter}`;
+
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Altair Scatter Plot with Cutoff",
     data: { url: "cleaned.csv" },
     transform: [
       { filter: `datum.State == 'CA'` },
@@ -167,6 +183,7 @@ function embedAltairScatter(quarter) {
 function embedAltairHistogram(quarter) {
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Altair Histogram",
     data: { url: "cleaned.csv" },
     mark: "bar",
     encoding: {
