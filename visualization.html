@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAFSA Application Trends</title>
+  <title>FAFSA Application Trends and Institutional Factors</title>
   <link rel="stylesheet" href="style.css"/>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -14,7 +14,7 @@
 <body>
   <div class="container">
     <h1>FAFSA Application Trends and Institutional Factors</h1>
-    <p>This dashboard explores FAFSA application patterns using D3 and Altair visualizations.</p>
+    <p>This dashboard explores FAFSA application patterns across U.S. institutions using D3 and Altair visualizations.</p>
 
     <div class="tabs">
       <button class="tab-button active" data-quarter="Q1">Q1</button>
@@ -24,6 +24,15 @@
       <button class="tab-button" data-quarter="Q5">Q5</button>
     </div>
 
+    <div class="control-row">
+      <label for="stateDropdown">Select State:</label>
+      <select id="stateDropdown"></select>
+
+      <label for="cutoffRange">Cutoff:</label>
+      <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="0">
+      <span id="cutoffValue">0</span>
+    </div>
+
     <h2>Top 10 Institutions by FAFSA Applications</h2>
     <div id="bar-chart"></div>
 
@@ -31,13 +40,9 @@
     <div id="map"></div>
 
     <h2>Dependent vs. Independent Applicants</h2>
-    <label for="stateSelect">Select State:</label>
-    <select id="stateSelect"></select>
     <div id="scatter-plot"></div>
 
     <h2>Institutional Applicants by State (Altair Scatter)</h2>
-    <label for="cutoffRange">Cutoff: Show only schools with applications ≥ <span id="cutoffValue">0</span></label>
-    <input type="range" id="cutoffRange" min="0" max="2000" step="10" value="0">
     <div id="altair-scatter"></div>
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
