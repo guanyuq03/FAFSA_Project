@@ -1,39 +1,35 @@
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f8f8;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
   margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1200px;
   margin: auto;
-  padding: 20px;
-  background-color: #fff;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 10px;
+  font-size: 26px;
+  color: #222;
 }
 
 h2 {
   margin-top: 40px;
-  font-size: 24px;
-  color: #333;
+  color: #222;
 }
 
 .tabs {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .tab-button {
-  padding: 10px 16px;
-  margin: 0 4px;
+  background-color: #eee;
   border: none;
-  background-color: #ddd;
+  padding: 10px 15px;
+  margin-right: 5px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -46,28 +42,8 @@ h2 {
 .controls {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  gap: 10px;
   margin-top: 10px;
-  margin-bottom: 30px;
-}
-
-label {
+  margin-bottom: 20px;
   font-weight: bold;
-}
-
-select,
-input[type="range"] {
-  padding: 4px;
-  font-size: 14px;
-}
-
-.tooltip {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 4px;
-  pointer-events: none;
 }
