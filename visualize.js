@@ -71,19 +71,28 @@ function drawBarChart(quarter) {
     .slice(0, 10);
 
   d3.select("#bar-chart").html("");
-  const svg = d3.select("#bar-chart").append("svg").attr("width", 800).attr("height", 400);
+  const svg = d3.select("#bar-chart")
+    .append("svg")
+    .attr("width", 900)
+    .attr("height", 500); // increased height
 
-  const x = d3.scaleBand().domain(data.map(d => d.School)).range([60, 750]).padding(0.3);
+  const x = d3.scaleBand()
+    .domain(data.map(d => d.School))
+    .range([60, 850])
+    .padding(0.3);
+
   const y = d3.scaleLinear()
     .domain([0, d3.max(data, d => parseInt(d[col].replace(/,/g, '')))])
-    .range([350, 50]);
+    .range([400, 50]);
 
   svg.append("g")
-    .attr("transform", "translate(0,350)")
+    .attr("transform", "translate(0,400)")
     .call(d3.axisBottom(x))
     .selectAll("text")
-    .attr("transform", "rotate(-40)")
-    .style("text-anchor", "end");
+    .attr("transform", "rotate(-30)")
+    .style("text-anchor", "end")
+    .style("font-size", "11px")
+    .attr("dy", "1em");
 
   svg.append("g")
     .attr("transform", "translate(60,0)")
@@ -99,7 +108,7 @@ function drawBarChart(quarter) {
     .attr("x", d => x(d.School))
     .attr("y", d => y(parseInt(d[col].replace(/,/g, ''))))
     .attr("width", x.bandwidth())
-    .attr("height", d => 350 - y(parseInt(d[col].replace(/,/g, ''))))
+    .attr("height", d => 400 - y(parseInt(d[col].replace(/,/g, ''))))
     .attr("fill", "#69b3a2")
     .on("mouseover", function (event, d) {
       d3.select(this).attr("fill", "#4287f5");
