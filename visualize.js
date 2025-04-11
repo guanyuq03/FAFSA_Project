@@ -152,8 +152,8 @@ function drawMapPlotly(quarter) {
     z: logValues,
     text: states.map((s, i) => `${s}<br>${rawValues[i].toLocaleString()} applications`),
     hoverinfo: 'text',
-    colorscale: 'Blues',           // Keep original blue scale
-    reversescale: true,            // <<<<<<<<<<<< THIS IS THE FIX
+    colorscale: 'YlGnBu',           
+    reversescale: true,            
     colorbar: {
       title: `Log FAFSA Apps (${quarter})`,
       tickvals: [0, 1, 2, 3, 4, 5, 6],
