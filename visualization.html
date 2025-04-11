@@ -15,16 +15,16 @@
   <header>
     <h1>FAFSA Visualizations</h1>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="data_information.html">Data Information</a>
-      <a href="visualization.html">Visualizations</a>
-      <a href="conclusion.html">Conclusion</a>
+      <a href=" ">Home</a >
+      <a href="data_information.html">Data Information</a >
+      <a href="visualization.html">Visualizations</a >
+      <a href="conclusion.html">Conclusion</a >
     </nav>
   </header>
 
   <div class="container">
     <h2>FAFSA Application Trends and Institutional Factors</h2>
-    <p>This dashboard explores FAFSA application patterns across U.S. institutions using D3 and Altair visualizations.</p>
+    <p>This dashboard explores FAFSA application patterns across U.S. institutions using D3 and Altair visualizations.</p >
 
     <div class="tabs">
       <button class="tab-button active" data-quarter="Q1">Q1</button>
@@ -38,23 +38,29 @@
     <div id="bar-chart"></div>
     <p class="takeaway">
       <strong>Takeaway:</strong> This bar chart highlights the top 10 institutions with the highest FAFSA applications. Most are large public universities, suggesting their scale and accessibility play a major role in financial aid demand.
-    </p>
+    </p >
 
     <h2>FAFSA Applications by State (Map)</h2>
     <div id="map"></div>
     <p class="takeaway">
       <strong>Takeaway:</strong> The map visualizes FAFSA totals by state. States with larger populations—such as California, Texas, and New York—stand out, reflecting both demographic size and institutional reach.
-    </p>
+    </p >
 
     <h2>Dependent vs. Independent Applicants</h2>
-    <div id="scatter-plot"></div>
     <div class="controls">
-      <label for="stateDropdown">Select State:</label>
+      <label for="stateDropdown">Filter by State:</label>
       <select id="stateDropdown"></select>
     </div>
+    <div id="scatter-plot"></div>
     <p class="takeaway">
-      <strong>Takeaway:</strong> X-axis: Dependent students. Y-axis: Independent students. This scatter plot compares dependent and independent student applicants. It reveals differences in student populations served by each institution and lets users filter by state for localized insights.
-    </p>
+      <strong>Takeaway:</strong> X-axis: Dependent students. Y-axis: Independent students. This scatter plot compares dependent and independent student applicants. It reveals differences in student populations served by each institution.
+    </p >
+
+    <h2>Top 10 States by FAFSA Applications: Dependent vs. Independent</h2>
+    <div id="state-bar-chart"></div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> This grouped bar chart compares the number of dependent and independent applicants across the top 10 states. It highlights differences in student demographics by region and provides insight into where financial aid demand is highest among different student types.
+    </p >
 
     <h2>Institutional Applicants by CutOff (Altair Scatter)</h2>
     <div id="altair-scatter"></div>
@@ -65,13 +71,13 @@
     </div>
     <p class="takeaway">
       <strong>Takeaway:</strong> This interactive scatter plot uses a cutoff slider to filter schools based on application volume. It provides a focused view of how FAFSA submissions differ across institutions with varying student profiles.
-    </p>
+    </p >
 
     <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
     <div id="altair-histogram"></div>
     <p class="takeaway">
       <strong>Takeaway:</strong> The histogram shows how FAFSA applications are distributed across schools. Most institutions receive fewer applications, while a small group has significantly higher totals, indicating a skewed distribution.
-    </p>
+    </p >
   </div>
 
   <script src="visualize.js"></script>
