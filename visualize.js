@@ -71,28 +71,34 @@ function drawBarChart(quarter) {
     .slice(0, 10);
 
   d3.select("#bar-chart").html("");
+
+  const width = 900;
+  const height = 550;  // more space for bottom
+  const marginBottom = 120; // more space for labels
+
   const svg = d3.select("#bar-chart")
     .append("svg")
-    .attr("width", 900)
-    .attr("height", 500); // increased height
+    .attr("width", width)
+    .attr("height", height);
 
   const x = d3.scaleBand()
     .domain(data.map(d => d.School))
-    .range([60, 850])
+    .range([60, width - 50])
     .padding(0.3);
 
   const y = d3.scaleLinear()
     .domain([0, d3.max(data, d => parseInt(d[col].replace(/,/g, '')))])
-    .range([400, 50]);
+    .range([height - marginBottom, 50]);
 
   svg.append("g")
-    .attr("transform", "translate(0,400)")
+    .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(x))
     .selectAll("text")
-    .attr("transform", "rotate(-30)")
+    .attr("transform", "rotate(-35)")
     .style("text-anchor", "end")
     .style("font-size", "11px")
-    .attr("dy", "1em");
+    .attr("dy", "1.2em")  // push text down
+    .attr("dx", "-0.5em"); // move text slightly left
 
   svg.append("g")
     .attr("transform", "translate(60,0)")
@@ -108,7 +114,7 @@ function drawBarChart(quarter) {
     .attr("x", d => x(d.School))
     .attr("y", d => y(parseInt(d[col].replace(/,/g, ''))))
     .attr("width", x.bandwidth())
-    .attr("height", d => 400 - y(parseInt(d[col].replace(/,/g, ''))))
+    .attr("height", d => height - marginBottom - y(parseInt(d[col].replace(/,/g, ''))))
     .attr("fill", "#69b3a2")
     .on("mouseover", function (event, d) {
       d3.select(this).attr("fill", "#4287f5");
@@ -122,6 +128,7 @@ function drawBarChart(quarter) {
       tooltip.transition().duration(200).style("opacity", 0);
     });
 }
+
 
 function drawMapPlotly(quarter) {
   const col = "Quarterly Total_" + quarter;
