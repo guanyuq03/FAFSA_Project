@@ -143,7 +143,7 @@ function drawMapPlotly(quarter) {
 
   const states = Object.keys(stateData);
   const rawValues = states.map(s => stateData[s]);
-  const logValues = rawValues.map(v => Math.log10(1 + v));
+  const logValues = rawValues.map(v => Math.log10(1 + v));  // Avoid log(0)
 
   const data = [{
     type: 'choropleth',
@@ -152,12 +152,11 @@ function drawMapPlotly(quarter) {
     z: logValues,
     text: states.map((s, i) => `${s}<br>Raw Total: ${rawValues[i].toLocaleString()}`),
     hoverinfo: 'text',
-    // REVERSED DARK-BLUE TO LIGHT SCALE
     colorscale: [
-      [0, '#08306b'],  // darkest blue for high
-      [1, '#deebf7']   // light blue for low
+      [0, '#deebf7'],   // light blue for low
+      [1, '#08306b']    // dark blue for high
     ],
-    reversescale: false,  // keep false since we manually reversed the colors
+    reversescale: false,  // do NOT reverse manually
     zmin: 0,
     zmax: Math.max(...logValues),
     colorbar: {
@@ -174,6 +173,7 @@ function drawMapPlotly(quarter) {
 
   Plotly.newPlot('map', data, layout);
 }
+
 
 
 
