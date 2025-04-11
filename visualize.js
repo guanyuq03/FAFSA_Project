@@ -143,19 +143,21 @@ function drawMapPlotly(quarter) {
 
   const states = Object.keys(stateData);
   const rawValues = states.map(s => stateData[s]);
-  const logValues = rawValues.map(v => Math.log10(1 + v)); // Apply log transformation
+  const logValues = rawValues.map(v => Math.log10(1 + v));
 
   const data = [{
     type: 'choropleth',
     locationmode: 'USA-states',
     locations: states,
     z: logValues,
-    text: rawValues.map((v, i) => `${states[i]}<br>Raw Total: ${v.toLocaleString()}`),
+    text: states.map((s, i) => `${s}<br>Raw Total: ${rawValues[i].toLocaleString()}`),
     hoverinfo: 'text',
+    // REVERSED DARK-BLUE TO LIGHT SCALE
     colorscale: [
-      [0, '#08306b'],  // darkest blue for highest
-      [1, '#deebf7']   // lightest blue for lowest
+      [0, '#08306b'],  // darkest blue for high
+      [1, '#deebf7']   // light blue for low
     ],
+    reversescale: false,  // keep false since we manually reversed the colors
     zmin: 0,
     zmax: Math.max(...logValues),
     colorbar: {
