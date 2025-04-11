@@ -133,6 +133,7 @@ function drawBarChart(quarter) {
 function drawMapPlotly(quarter) {
   const col = "Quarterly Total_" + quarter;
   const stateData = {};
+
   globalData.forEach(d => {
     const val = parseInt(d[col]?.replace(/,/g, ''));
     if (!isNaN(val)) {
@@ -141,28 +142,37 @@ function drawMapPlotly(quarter) {
   });
 
   const states = Object.keys(stateData);
-  const values = states.map(s => stateData[s]);
+  const rawValues = states.map(s => stateData[s]);
+  const logValues = rawValues.map(v => Math.log10(1 + v)); // log transform to normalize
 
   const data = [{
     type: 'choropleth',
     locationmode: 'USA-states',
     locations: states,
-    z: values,
-    colorscale: 'Blues',
+    z: logValues,
+    text: rawValues.map((v, i) => `${states[i]}<br>Raw Total: ${v.toLocaleString()}`),
+    hoverinfo: 'text',
+    colorscale: [
+      [0, '#deebf7'],
+      [1, '#08306b']
+    ], // reversed: darker = higher
     colorbar: {
-      title: `${quarter} Total`,
+      title: `Log FAFSA Apps (${quarter})`,
+      tickvals: [0, 1, 2, 3, 4, 5, 6],
+      ticktext: ['1', '10', '100', '1k', '10k', '100k', '1M']
     },
+    zmin: 0,
+    zmax: Math.max(...logValues)
   }];
 
   const layout = {
-    geo: {
-      scope: 'usa',
-    },
-    margin: { t: 0, b: 0 },
+    geo: { scope: 'usa' },
+    margin: { t: 0, b: 0 }
   };
 
   Plotly.newPlot('map', data, layout);
 }
+
 
 function drawScatterPlot(quarter) {
   const depCol = `Dependent Students_${quarter}`;
