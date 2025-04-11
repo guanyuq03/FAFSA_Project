@@ -73,8 +73,8 @@ function drawBarChart(quarter) {
   d3.select("#bar-chart").html("");
 
   const width = 900;
-  const height = 550;  // more space for bottom
-  const marginBottom = 120; // more space for labels
+  const height = 650;  // even more height
+  const marginBottom = 200; // more space for labels
 
   const svg = d3.select("#bar-chart")
     .append("svg")
@@ -94,11 +94,11 @@ function drawBarChart(quarter) {
     .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(x))
     .selectAll("text")
-    .attr("transform", "rotate(-35)")
+    .attr("transform", "rotate(-55)")  // more rotation
     .style("text-anchor", "end")
     .style("font-size", "11px")
-    .attr("dy", "1.2em")  // push text down
-    .attr("dx", "-0.5em"); // move text slightly left
+    .attr("dy", "1em")
+    .attr("dx", "-0.8em");
 
   svg.append("g")
     .attr("transform", "translate(60,0)")
