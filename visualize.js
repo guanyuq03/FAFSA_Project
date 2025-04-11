@@ -143,7 +143,7 @@ function drawMapPlotly(quarter) {
 
   const states = Object.keys(stateData);
   const rawValues = states.map(s => stateData[s]);
-  const logValues = rawValues.map(v => Math.log10(1 + v)); // log transform to normalize
+  const logValues = rawValues.map(v => Math.log10(1 + v)); // Apply log transformation
 
   const data = [{
     type: 'choropleth',
@@ -153,16 +153,16 @@ function drawMapPlotly(quarter) {
     text: rawValues.map((v, i) => `${states[i]}<br>Raw Total: ${v.toLocaleString()}`),
     hoverinfo: 'text',
     colorscale: [
-      [0, '#deebf7'],
-      [1, '#08306b']
-    ], // reversed: darker = higher
+      [0, '#08306b'],  // darkest blue for highest
+      [1, '#deebf7']   // lightest blue for lowest
+    ],
+    zmin: 0,
+    zmax: Math.max(...logValues),
     colorbar: {
       title: `Log FAFSA Apps (${quarter})`,
       tickvals: [0, 1, 2, 3, 4, 5, 6],
       ticktext: ['1', '10', '100', '1k', '10k', '100k', '1M']
-    },
-    zmin: 0,
-    zmax: Math.max(...logValues)
+    }
   }];
 
   const layout = {
@@ -172,6 +172,7 @@ function drawMapPlotly(quarter) {
 
   Plotly.newPlot('map', data, layout);
 }
+
 
 
 function drawScatterPlot(quarter) {
