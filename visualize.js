@@ -143,22 +143,17 @@ function drawMapPlotly(quarter) {
 
   const states = Object.keys(stateData);
   const rawValues = states.map(s => stateData[s]);
-  const logValues = rawValues.map(v => Math.log10(1 + v));  // Avoid log(0)
+  const logValues = rawValues.map(v => Math.log10(v + 1)); // log transform to reduce skew
 
   const data = [{
     type: 'choropleth',
     locationmode: 'USA-states',
     locations: states,
     z: logValues,
-    text: states.map((s, i) => `${s}<br>Raw Total: ${rawValues[i].toLocaleString()}`),
+    text: states.map((s, i) => `${s}<br>${rawValues[i].toLocaleString()} applications`),
     hoverinfo: 'text',
-    colorscale: [
-      [0, '#deebf7'],   // light blue for low
-      [1, '#08306b']    // dark blue for high
-    ],
-    reversescale: false,  // do NOT reverse manually
-    zmin: 0,
-    zmax: Math.max(...logValues),
+    colorscale: 'Blues',           // Keep original blue scale
+    reversescale: true,            // <<<<<<<<<<<< THIS IS THE FIX
     colorbar: {
       title: `Log FAFSA Apps (${quarter})`,
       tickvals: [0, 1, 2, 3, 4, 5, 6],
@@ -167,7 +162,9 @@ function drawMapPlotly(quarter) {
   }];
 
   const layout = {
-    geo: { scope: 'usa' },
+    geo: {
+      scope: 'usa',
+    },
     margin: { t: 0, b: 0 }
   };
 
