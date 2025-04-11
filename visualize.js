@@ -4,10 +4,16 @@ let selectedState = "ALL";
 
 document.addEventListener("DOMContentLoaded", function () {
   d3.csv("cleaned.csv").then(data => {
+    if (!data || data.length === 0) {
+      console.error("No data loaded or empty dataset");
+      return;
+    }
     globalData = data;
     populateStateDropdown();
     init();
     updateCharts(currentQuarter);
+  }).catch(error => {
+    console.error("Error loading CSV:", error);
   });
 
   document.getElementById("cutoffRange").addEventListener("input", function () {
