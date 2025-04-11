@@ -368,6 +368,14 @@ function drawStateSideBySideBarChart(quarter) {
   });
 }
 
+function updateCharts(quarter) {
+  drawBarChart(quarter);
+  drawMapPlotly(quarter);
+  drawScatterPlot(quarter);
+  drawStateSideBySideBarChart(quarter);  
+  embedAltairScatter(quarter);
+  embedAltairHistogram(quarter);
+}
 
 function embedAltairScatter(quarter) {
   const cutoff = +document.getElementById("cutoffRange").value;
@@ -409,3 +417,5 @@ function embedAltairHistogram(quarter) {
   };
   vegaEmbed("#altair-histogram", chart, { actions: false });
 }
+
+
