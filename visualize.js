@@ -72,9 +72,9 @@ function drawBarChart(quarter) {
 
   d3.select("#bar-chart").html("");
 
-  const width = 900;
-  const height = 650;  // even more height
-  const marginBottom = 200; // more space for labels
+  const width = 950;
+  const height = 720;  // more height for label space
+  const marginBottom = 280;  // significantly more space
 
   const svg = d3.select("#bar-chart")
     .append("svg")
@@ -83,7 +83,7 @@ function drawBarChart(quarter) {
 
   const x = d3.scaleBand()
     .domain(data.map(d => d.School))
-    .range([60, width - 50])
+    .range([70, width - 50])
     .padding(0.3);
 
   const y = d3.scaleLinear()
@@ -94,14 +94,14 @@ function drawBarChart(quarter) {
     .attr("transform", `translate(0, ${height - marginBottom})`)
     .call(d3.axisBottom(x))
     .selectAll("text")
-    .attr("transform", "rotate(-55)")  // more rotation
+    .attr("transform", "rotate(-65)")  // more rotation
     .style("text-anchor", "end")
-    .style("font-size", "11px")
-    .attr("dy", "1em")
-    .attr("dx", "-0.8em");
+    .style("font-size", "12px")
+    .attr("dy", "1.2em")
+    .attr("dx", "-0.9em");
 
   svg.append("g")
-    .attr("transform", "translate(60,0)")
+    .attr("transform", "translate(70,0)")
     .call(d3.axisLeft(y));
 
   const tooltip = d3.select("#bar-chart").append("div")
