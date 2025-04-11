@@ -61,13 +61,6 @@ function populateStateDropdown() {
 
 function init() {}
 
-function updateCharts(quarter) {
-  drawBarChart(quarter);
-  drawMapPlotly(quarter);
-  drawScatterPlot(quarter);
-  embedAltairScatter(quarter);
-  embedAltairHistogram(quarter);
-}
 
 function drawBarChart(quarter) {
   const col = "Quarterly Total_" + quarter;
