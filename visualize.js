@@ -179,33 +179,189 @@ function drawScatterPlot(quarter) {
   const indCol = `Independent Students_${quarter}`;
 
   let data = globalData.filter(d => d[depCol] && d[indCol]);
-
+  
+  // Filter by selected state if not "ALL"
   if (selectedState !== "ALL") {
     data = data.filter(d => d.State === selectedState);
   }
 
   d3.select("#scatter-plot").html("");
-  const svg = d3.select("#scatter-plot").append("svg").attr("width", 800).attr("height", 400);
+  const svg = d3.select("#scatter-plot")
+    .append("svg")
+    .attr("width", 800)
+    .attr("height", 400);
+
+  const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+  const width = 800 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
+
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
   const x = d3.scaleLinear()
     .domain([0, d3.max(data, d => +d[depCol].replace(/,/g, ''))])
-    .range([60, 750]);
+    .range([0, width]);
 
   const y = d3.scaleLinear()
     .domain([0, d3.max(data, d => +d[indCol].replace(/,/g, ''))])
-    .range([350, 50]);
+    .range([height, 0]);
 
-  svg.append("g").attr("transform", "translate(0,350)").call(d3.axisBottom(x));
-  svg.append("g").attr("transform", "translate(60,0)").call(d3.axisLeft(y));
+  // Axes
+  g.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x));
 
-  svg.selectAll("circle")
+  g.append("g")
+    .call(d3.axisLeft(y));
+
+  // Scatter points
+  g.selectAll("circle")
     .data(data)
     .join("circle")
     .attr("cx", d => x(+d[depCol].replace(/,/g, '')))
     .attr("cy", d => y(+d[indCol].replace(/,/g, '')))
     .attr("r", 4)
     .attr("fill", "#1f77b4");
+
+  const xVals = data.map(d => +d[depCol].replace(/,/g, ''));
+  const yVals = data.map(d => +d[indCol].replace(/,/g, ''));
+
+  // compute linear regression using least squares
+  const n = xVals.length;
+  const sumX = d3.sum(xVals);
+  const sumY = d3.sum(yVals);
+  const sumXY = d3.sum(xVals.map((x, i) => x * yVals[i]));
+  const sumX2 = d3.sum(xVals.map(x => x * x));
+
+  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - slope * sumX) / n;
+
+  
+  const xMin = d3.min(xVals);
+  const xMax = d3.max(xVals);
+  const yMin = slope * xMin + intercept;
+  const yMax = slope * xMax + intercept;
+
+  // draw the line
+  g.append("line")
+    .attr("x1", x(xMin))
+    .attr("y1", y(yMin))
+    .attr("x2", x(xMax))
+    .attr("y2", y(yMax))
+    .attr("stroke", "red")
+    .attr("stroke-width", 2);
 }
+
+function drawStateSideBySideBarChart(quarter) {
+  const depCol = `Dependent Students_${quarter}`;
+  const indCol = `Independent Students_${quarter}`;
+
+  const parsed = globalData
+    .filter(d => d[depCol] && d[indCol])
+    .map(d => ({
+      state: d.State,
+      dependent: +d[depCol].replace(/,/g, ''),
+      independent: +d[indCol].replace(/,/g, '')
+    }));
+
+  const stateAgg = d3.rollups(
+    parsed,
+    v => ({
+      dependent: d3.sum(v, d => d.dependent),
+      independent: d3.sum(v, d => d.independent)
+    }),
+    d => d.state
+  ).map(([state, values]) => ({ state, ...values }));
+
+  // Select TOP 10 States
+  const topStates = stateAgg
+    .sort((a, b) => (b.dependent + b.independent) - (a.dependent + a.independent))
+    .slice(0, 10);
+
+  d3.select("#state-bar-chart").html("");
+
+  const margin = { top: 30, right: 30, bottom: 70, left: 60 },
+        width = 800 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+  const svg = d3.select("#state-bar-chart")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const x0 = d3.scaleBand()
+    .domain(topStates.map(d => d.state))
+    .range([0, width])
+    .padding(0.2);
+
+  const x1 = d3.scaleBand()
+    .domain(["Dependent", "Independent"])
+    .range([0, x0.bandwidth()])
+    .padding(0.05);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(topStates, d => Math.max(d.dependent, d.independent))])
+    .nice()
+    .range([height, 0]);
+
+  const color = d3.scaleOrdinal()
+    .domain(["Dependent", "Independent"])
+    .range(["#1f77b4", "#ff7f0e"]);
+
+  // X Axis
+  svg.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x0))
+    .selectAll("text")
+    .attr("transform", "rotate(-40)")
+    .style("text-anchor", "end");
+
+  // Y Axis
+  svg.append("g")
+    .call(d3.axisLeft(y));
+
+  // Bars
+  svg.append("g")
+    .selectAll("g")
+    .data(topStates)
+    .join("g")
+    .attr("transform", d => `translate(${x0(d.state)},0)`)
+    .selectAll("rect")
+    .data(d => [
+      { key: "Dependent", value: d.dependent },
+      { key: "Independent", value: d.independent }
+    ])
+    .join("rect")
+    .attr("x", d => x1(d.key))
+    .attr("y", d => y(d.value))
+    .attr("width", x1.bandwidth())
+    .attr("height", d => height - y(d.value))
+    .attr("fill", d => color(d.key));
+
+  // Legend
+  const legend = svg.append("g")
+    .attr("transform", `translate(${width - 100}, -20)`);
+
+  ["Dependent", "Independent"].forEach((key, i) => {
+    const legendRow = legend.append("g")
+      .attr("transform", `translate(0, ${i * 20})`);
+
+    legendRow.append("rect")
+      .attr("width", 12)
+      .attr("height", 12)
+      .attr("fill", color(key));
+
+    legendRow.append("text")
+      .attr("x", 20)
+      .attr("y", 10)
+      .text(key)
+      .attr("text-anchor", "start")
+      .style("alignment-baseline", "middle");
+  });
+}
+
 
 function embedAltairScatter(quarter) {
   const cutoff = +document.getElementById("cutoffRange").value;
