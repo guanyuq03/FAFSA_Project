@@ -15,7 +15,7 @@
   <header>
     <h1>FAFSA Visualizations</h1>
     <nav>
-      <a href="index.html" ">Home</a >
+      <a href=" ">Home</a >
       <a href="data_information.html">Data Information</a >
       <a href="visualization.html">Visualizations</a >
       <a href="conclusion.html">Conclusion</a >
@@ -24,16 +24,7 @@
 
   <div class="container">
     <h2>FAFSA Application Trends and Institutional Factors</h2>
-
-    <p>
-      This project explores our dataset (<em>cleaned.csv</em>) with multiple
-      charts. We can switch among quarters (Q1..Q5) for selected charts, and we
-      have an aggregated line chart and stacked bar chart for Q1..Q5.
-    </p>
-
-    <p>
-      This analysis examines quarterly enrollment trends (Q1–Q5) across 1,271 U.S. educational institutions in different states. The dataset compares dependent and independent student enrollment patterns at public, private, and proprietary schools, identified by OPE ID, name, location, and type. The cleaned and standardized data enables deeper investigation of seasonal enrollment impacts, financial aid policy effects on student dependency ratios, and regional education disparities. These insights support policymaking, academic research, and institutional planning by revealing comparative enrollment trends and enabling predictive modeling. The preprocessing work established a strong foundation for robust statistical analysis of these educational patterns.
-    </p>
+    <p>This dashboard explores FAFSA application patterns across U.S. institutions using D3 and Altair visualizations.</p >
 
     <div class="tabs">
       <button class="tab-button active" data-quarter="Q1">Q1</button>
@@ -76,13 +67,12 @@
     <p class="takeaway">
       <strong>Takeaway:</strong> This grouped bar chart compares the number of dependent and independent applicants across the top 10 states. It highlights differences in student demographics by region and provides insight into where financial aid demand is highest among different student types.
     </p >
-    
-    <h2>FAFSA Applications by Institution Type</h2>
-    <div id="altair-boxplot" class="chart-svg"></div>
-    <p class="takeaway">
-       <strong>Takeaway:</strong> This interactive boxplot displays FAFSA application distributions by institution type across five quarters. Public institutions consistently show the highest median application totals, indicating they serve a larger student population seeking aid. Private institutions exhibit greater variability, while proprietary and unknown institutions tend to have lower application volumes.
-    </p>
 
+    <h2>Top States by Dependent vs. Independent Applications</h2>
+    <div id="grouped-bar" class="chart-svg"></div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> This grouped bar chart shows the top 10 states by total FAFSA applications, split into dependent and independent applicants. It highlights key differences in student composition across states.
+    </p>
   </div>
 
   <script src="visualize.js"></script>
