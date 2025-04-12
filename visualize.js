@@ -397,7 +397,6 @@ function updateCharts(quarter) {
   drawMapPlotly(quarter);
   drawScatterPlot(quarter);
   drawStateSideBySideBarChart(quarter);  
-  embedAltairScatter(quarter);
   embedAltairHistogram(quarter);
   embedAltairBoxplotAllQuarters();
 }
