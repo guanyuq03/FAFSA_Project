@@ -399,14 +399,6 @@ function drawStateSideBySideBarChart(quarter) {
   });
 }
 
-function updateCharts(quarter) {
-  drawBarChart(quarter);
-  drawMapPlotly(quarter);
-  drawScatterPlot(quarter);
-  drawStateSideBySideBarChart(quarter);  
-  embedAltairHistogram(quarter);
-}
-
 function embedAltairBoxplotAllQuarters() {
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
