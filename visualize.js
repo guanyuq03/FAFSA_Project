@@ -16,10 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("Error loading CSV:", error);
   });
 
-  document.getElementById("cutoffRange").addEventListener("input", function () {
-    document.getElementById("cutoffValue").textContent = this.value;
-    embedAltairScatter(currentQuarter);
-  });
 
   document.getElementById("stateDropdown").addEventListener("change", function () {
     selectedState = this.value;
@@ -393,11 +389,11 @@ function drawStateSideBySideBarChart(quarter) {
 }
 
 function updateCharts(quarter) {
+  embedAltairHistogram(quarter)
   drawBarChart(quarter);
   drawMapPlotly(quarter);
   drawScatterPlot(quarter);
-  drawStateSideBySideBarChart(quarter);  
-  embedAltairHistogram(quarter);
+  drawStateSideBySideBarChart(quarter);  ;
   embedAltairBoxplotAllQuarters();
 }
 
