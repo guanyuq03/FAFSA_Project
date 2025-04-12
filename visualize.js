@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("cutoffRange").addEventListener("input", function () {
     document.getElementById("cutoffValue").textContent = this.value;
-    embedAltairScatter(currentQuarter);
   });
 
   document.getElementById("stateDropdown").addEventListener("change", function () {
@@ -405,7 +404,6 @@ function updateCharts(quarter) {
   drawMapPlotly(quarter);
   drawScatterPlot(quarter);
   drawStateSideBySideBarChart(quarter);  
-  embedAltairScatter(quarter);
   embedAltairHistogram(quarter);
 }
 
