@@ -93,12 +93,12 @@ function populateStateDropdown() {
 function init() {}
 
 function updateCharts(quarter) {
+  embedAltairHistogram(quarter);
   drawBarChart(quarter);
   drawMapPlotly(quarter);
   drawScatterPlot(quarter);
-  embedAltairScatter(quarter);
-  embedAltairHistogram(quarter);
-  embedAltairBoxplotAllQuarters(); 
+  drawStateSideBySideBarChart(quarter);  
+  embedAltairBoxplotAllQuarters();
 }
 
 function drawBarChart(quarter) {
