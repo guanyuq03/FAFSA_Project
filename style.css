@@ -1,3 +1,4 @@
+/* Reset & Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -6,15 +7,24 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f4f8;
+  background: linear-gradient(120deg, #f0f4f8 0%, #e6f7ff 100%);
   color: #333;
-  font-size: 18px; /* Increased from default to improve readability */
+  font-size: 18px;
   line-height: 1.7;
   max-width: 1200px;
   margin: 20px auto;
   padding: 0 15px;
+  animation: backgroundMove 30s ease infinite;
+  background-size: 400% 400%;
 }
 
+@keyframes backgroundMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Header */
 header {
   background: linear-gradient(135deg, #007acc, #00b4d8);
   color: #fff;
@@ -27,9 +37,20 @@ header {
 
 header h1 {
   margin-bottom: 10px;
-  font-size: 34px; /* Larger title */
+  font-size: 34px;
+  background: linear-gradient(90deg, #fff, #ffd700, #fff);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 5s infinite linear;
+  background-size: 200% auto;
 }
 
+@keyframes shine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Navigation */
 nav {
   margin-top: 10px;
 }
@@ -39,7 +60,7 @@ nav a {
   color: #fff;
   text-decoration: none;
   font-weight: 600;
-  font-size: 18px; /* Larger nav links */
+  font-size: 18px;
   transition: color 0.3s ease;
 }
 
@@ -47,6 +68,7 @@ nav a:hover {
   color: #ffd700;
 }
 
+/* Container */
 .container {
   background: #fff;
   padding: 25px 35px;
@@ -55,7 +77,7 @@ nav a:hover {
 }
 
 h2 {
-  font-size: 24px; /* Increased h2 font size */
+  font-size: 24px;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
   color: #007acc;
@@ -63,6 +85,7 @@ h2 {
   padding-bottom: 6px;
 }
 
+/* Tabs */
 .tabs {
   text-align: center;
   margin: 20px 0;
@@ -76,15 +99,19 @@ h2 {
   color: #fff;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 16px; /* Larger tab font */
-  transition: background 0.3s ease;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .tab-button:hover,
 .tab-button.active {
   background: #005fa3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Controls */
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -107,6 +134,7 @@ h2 {
   font-size: 16px;
 }
 
+/* Chart Area */
 .chart-svg {
   background-color: #fff;
   border: 1px solid #ccc;
@@ -121,12 +149,54 @@ h2 {
   color: #fff;
   border-radius: 4px;
   pointer-events: none;
-  font-size: 14px; /* Slightly bigger for visibility */
+  font-size: 14px;
   opacity: 0;
   transition: opacity 0.2s;
 }
 
 .legend {
-  font-size: 14px; /* Slightly larger legend */
+  font-size: 14px;
   fill: #333;
+}
+
+/* Slideshow */
+.slideshow-container {
+  position: relative;
+  max-width: 100%;
+  height: 400px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.fade-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: fade 12s infinite;
+}
+
+.fade-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fade-slide:nth-child(1) { animation-delay: 0s; }
+.fade-slide:nth-child(2) { animation-delay: 4s; }
+.fade-slide:nth-child(3) { animation-delay: 8s; }
+
+@keyframes fade {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  30% { opacity: 1; }
+  40% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
 }
