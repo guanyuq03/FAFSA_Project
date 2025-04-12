@@ -485,3 +485,15 @@ function updateCharts(quarter) {
   drawStateSideBySideBarChart(quarter);  
   embedAltairBoxplotAllQuarters(); // this uses ALL quarters, not specific quarter
 }
+let slideIndex = 0;
+const slides = document.querySelectorAll(".slide");
+
+function showSlides() {
+  slides.forEach((slide, idx) => {
+    slide.style.display = idx === slideIndex ? "block" : "none";
+  });
+  slideIndex = (slideIndex + 1) % slides.length;
+  setTimeout(showSlides, 3000); // Change image every 3 seconds
+}
+
+document.addEventListener("DOMContentLoaded", showSlides);
