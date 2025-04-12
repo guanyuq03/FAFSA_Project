@@ -34,6 +34,12 @@
       <button class="tab-button" data-quarter="Q5">Q5</button>
     </div>
 
+    <h2>Distribution of FAFSA Applications (Histogram)</h2>
+    <div id="altair-histogram" class="chart-svg"></div>
+    <p class="takeaway">
+      <strong>Takeaway:</strong> The histogram shows how FAFSA applications are distributed across schools. Most institutions receive fewer applications, while a small group has significantly higher totals, indicating a skewed distribution.
+    </p>
+    
     <h2>Top 10 Institutions by FAFSA Applications</h2>
     <div id="bar-chart"></div>
     <p class="takeaway">
@@ -62,22 +68,11 @@
       <strong>Takeaway:</strong> This grouped bar chart compares the number of dependent and independent applicants across the top 10 states. It highlights differences in student demographics by region and provides insight into where financial aid demand is highest among different student types.
     </p >
 
-    <h2>Institutional Applicants by CutOff (Altair Scatter)</h2>
-    <div id="altair-scatter"></div>
-    <div class="controls">
-      <label for="cutoffRange">Cutoff:</label>
-      <input type="range" id="cutoffRange" min="0" max="1000" step="10" value="500">
-      <span id="cutoffValue">500</span>
-    </div>
+    <h2>Top States by Dependent vs. Independent Applications</h2>
+    <div id="grouped-bar" class="chart-svg"></div>
     <p class="takeaway">
-      <strong>Takeaway:</strong> This interactive scatter plot uses a cutoff slider to filter schools based on application volume. It provides a focused view of how FAFSA submissions differ across institutions with varying student profiles.
-    </p >
-
-    <h2>Distribution of FAFSA Applications (Altair Histogram)</h2>
-    <div id="altair-histogram"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> The histogram shows how FAFSA applications are distributed across schools. Most institutions receive fewer applications, while a small group has significantly higher totals, indicating a skewed distribution.
-    </p >
+      <strong>Takeaway:</strong> This grouped bar chart shows the top 10 states by total FAFSA applications, split into dependent and independent applicants. It highlights key differences in student composition across states.
+    </p>
   </div>
 
   <script src="visualize.js"></script>
