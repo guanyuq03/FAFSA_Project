@@ -485,4 +485,3 @@ function updateCharts(quarter) {
   drawStateSideBySideBarChart(quarter);  
   embedAltairBoxplotAllQuarters(); // this uses ALL quarters, not specific quarter
 }
-
