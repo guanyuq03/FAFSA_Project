@@ -1,86 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FAFSA Application Trends Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-</head>
-<body>
-  <header>
-    <h1>FAFSA Visualizations</h1>
-    <nav>
-      <a href="index.html">Home</a >
-      <a href="data_information.html">Data Information</a >
-      <a href="visualization.html">Visualizations</a >
-      <a href="conclusion.html">Conclusion</a >
-    </nav>
-  </header>
-
-  <div class="container">
-    <h2>FAFSA Application Trends and Institutional Factors</h2>
-    <p>This dashboard explores FAFSA application patterns across U.S. institutions using D3 and Altair visualizations.</p >
-
-    <div class="tabs">
-      <button class="tab-button active" data-quarter="Q1">Q1</button>
-      <button class="tab-button" data-quarter="Q2">Q2</button>
-      <button class="tab-button" data-quarter="Q3">Q3</button>
-      <button class="tab-button" data-quarter="Q4">Q4</button>
-      <button class="tab-button" data-quarter="Q5">Q5</button>
-    </div>
-
-    <h2>Distribution of FAFSA Applications (Histogram)</h2>
-    <div id="altair-histogram" class="chart-svg"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> The histogram shows how FAFSA applications are distributed across schools. Most institutions receive fewer applications, while a small group has significantly higher totals, indicating a skewed distribution.
-    </p>
-    
-    <h2>Top 10 Institutions by FAFSA Applications</h2>
-    <div id="bar-chart"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> This bar chart highlights the top 10 institutions with the highest FAFSA applications. Most are large public universities, suggesting their scale and accessibility play a major role in financial aid demand.
-    </p >
-
-    <h2>FAFSA Applications by State (Map)</h2>
-    <div id="map"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> The map visualizes FAFSA totals by state. States with larger populations—such as California, Texas, and New York—stand out, reflecting both demographic size and institutional reach.
-    </p >
-
-    <h2>Dependent vs. Independent Applicants</h2>
-    <div class="controls">
-      <label for="stateDropdown">Filter by State:</label>
-      <select id="stateDropdown"></select>
-    </div>
-    <div id="scatter-plot"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> X-axis: Dependent students. Y-axis: Independent students. This scatter plot compares dependent and independent student applicants. It reveals differences in student populations served by each institution.
-    </p >
-
-    <h2>Top 10 States by FAFSA Applications: Dependent vs. Independent</h2>
-    <div id="state-bar-chart"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> This grouped bar chart compares the number of dependent and independent applicants across the top 10 states. It highlights differences in student demographics by region and provides insight into where financial aid demand is highest among different student types.
-    </p >
-
-    <h2>Top States by Dependent vs. Independent Applications</h2>
-    <div id="grouped-bar" class="chart-svg"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> This grouped bar chart shows the top 10 states by total FAFSA applications, split into dependent and independent applicants. It highlights key differences in student composition across states.
-    </p>
-  </div>
-
-    <h2>Distribution of FAFSA Applications by Institution Type</h2>
-    <div id="altair-boxplot" class="chart-svg"></div>
-    <p class="takeaway">
-      <strong>Takeaway:</strong> This boxplot compares FAFSA applications across different institution types and quarters, showing the spread of applications and highlighting outliers.
-    </p>
-
-  <script src="visualize.js"></script>
-</body>
-</html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+   <title>FAFSA Application Trends Dashboard</title>
+   <link rel="stylesheet" href="style.css" />
+   <script src="https://d3js.org/d3.v7.min.js"></script>
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+ </head>
+ <body>
+   <header>
+     <h1>FAFSA Visualizations</h1>
+     <nav>
+       <a href="index.html" ">Home</a >
+       <a href="data_information.html">Data Information</a >
+       <a href="visualization.html">Visualizations</a >
+       <a href="conclusion.html">Conclusion</a >
+     </nav>
+   </header>
+   
+   <div class="container">
+     <h2>FAFSA Application Trends and Institutional Factors</h2>
+ 
+     <p>
+       This project explores our dataset (<em>cleaned.csv</em>) with multiple
+       charts. We can switch among quarters (Q1..Q5) for selected charts, and we
+       have an aggregated line chart and stacked bar chart for Q1..Q5.
+     </p >
+ 
+     <p>
+       This analysis examines quarterly enrollment trends (Q1–Q5) across 1,271 U.S. educational institutions in different states. The dataset compares dependent and independent student enrollment patterns at public, private, and proprietary schools, identified by OPE ID, name, location, and type. The cleaned and standardized data enables deeper investigation of seasonal enrollment impacts, financial aid policy effects on student dependency ratios, and regional education disparities. These insights support policymaking, academic research, and institutional planning by revealing comparative enrollment trends and enabling predictive modeling. The preprocessing work established a strong foundation for robust statistical analysis of these educational patterns.
+     </p >
+ 
+     <div class="tabs">
+       <button class="tab-button active" data-quarter="Q1">Q1</button>
+       <button class="tab-button" data-quarter="Q2">Q2</button>
+       <button class="tab-button" data-quarter="Q3">Q3</button>
+       <button class="tab-button" data-quarter="Q4">Q4</button>
+       <button class="tab-button" data-quarter="Q5">Q5</button>
+     </div>
+ 
+     <h2>Distribution of FAFSA Applications (Histogram)</h2>
+     <div id="altair-histogram" class="chart-svg"></div>
+     <p class="takeaway">
