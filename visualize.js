@@ -16,6 +16,10 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("Error loading CSV:", error);
   });
 
+  document.getElementById("cutoffRange").addEventListener("input", function () {
+    document.getElementById("cutoffValue").textContent = this.value;
+    embedAltairScatter(currentQuarter);
+  });
 
   document.getElementById("stateDropdown").addEventListener("change", function () {
     selectedState = this.value;
@@ -32,27 +36,19 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+
 function embedAltairHistogram(quarter) {
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     description: "Histogram of FAFSA Total Applications",
-    width: 800,
-    height: 400,
+    width: 800,  // Make it wider
+    height: 400,  // Make it taller
     data: { url: "cleaned.csv" },
-    transform: [
-      {
-        calculate: `toNumber(datum["Quarterly Total_${quarter}"])`,
-        as: "Applications"
-      },
-      {
-        filter: "datum.Applications != null && isFinite(datum.Applications)"
-      }
-    ],
     mark: "bar",
     encoding: {
       x: {
+        field: `Quarterly Total_${quarter}`,
         bin: true,
-        field: "Applications",
         type: "quantitative",
         title: `FAFSA Total Applications (${quarter})`,
         axis: { labelFontSize: 14, titleFontSize: 16 }
@@ -64,23 +60,12 @@ function embedAltairHistogram(quarter) {
         axis: { labelFontSize: 14, titleFontSize: 16 }
       },
       tooltip: [
-        {
-          bin: true,
-          field: "Applications",
-          type: "quantitative",
-          title: "Application Range"
-        },
-        {
-          aggregate: "count",
-          type: "quantitative",
-          title: "Number of Institutions"
-        }
+        { field: `Quarterly Total_${quarter}`, type: "quantitative", title: "Applications" }
       ]
     }
   };
   vegaEmbed("#altair-histogram", chart, { actions: false });
 }
-
 
 function populateStateDropdown() {
   const stateDropdown = document.getElementById("stateDropdown");
@@ -106,6 +91,14 @@ function populateStateDropdown() {
 
 
 function init() {}
+
+function updateCharts(quarter) {
+  drawBarChart(quarter);
+  drawMapPlotly(quarter);
+  drawScatterPlot(quarter);
+  embedAltairScatter(quarter);
+  embedAltairHistogram(quarter);
+}
 
 function drawBarChart(quarter) {
   const col = "Quarterly Total_" + quarter;
@@ -406,6 +399,15 @@ function drawStateSideBySideBarChart(quarter) {
   });
 }
 
+function updateCharts(quarter) {
+  drawBarChart(quarter);
+  drawMapPlotly(quarter);
+  drawScatterPlot(quarter);
+  drawStateSideBySideBarChart(quarter);  
+  embedAltairScatter(quarter);
+  embedAltairHistogram(quarter);
+}
+
 function embedAltairBoxplotAllQuarters() {
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
@@ -475,13 +477,4 @@ function embedAltairBoxplotAllQuarters() {
   };
 
   vegaEmbed("#altair-boxplot", chart, { actions: false });
-}
-
-function updateCharts(quarter) {
-  embedAltairHistogram(quarter);
-  drawBarChart(quarter);
-  drawMapPlotly(quarter);
-  drawScatterPlot(quarter);
-  drawStateSideBySideBarChart(quarter);  
-  embedAltairBoxplotAllQuarters(); // this uses ALL quarters, not specific quarter
 }
