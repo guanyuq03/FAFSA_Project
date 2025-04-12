@@ -32,19 +32,27 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
 function embedAltairHistogram(quarter) {
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
     description: "Histogram of FAFSA Total Applications",
-    width: 800,  // Make it wider
-    height: 400,  // Make it taller
+    width: 800,
+    height: 400,
     data: { url: "cleaned.csv" },
+    transform: [
+      {
+        calculate: `toNumber(datum["Quarterly Total_${quarter}"])`,
+        as: "Applications"
+      },
+      {
+        filter: "datum.Applications != null && isFinite(datum.Applications)"
+      }
+    ],
     mark: "bar",
     encoding: {
       x: {
-        field: `Quarterly Total_${quarter}`,
         bin: true,
+        field: "Applications",
         type: "quantitative",
         title: `FAFSA Total Applications (${quarter})`,
         axis: { labelFontSize: 14, titleFontSize: 16 }
@@ -56,12 +64,23 @@ function embedAltairHistogram(quarter) {
         axis: { labelFontSize: 14, titleFontSize: 16 }
       },
       tooltip: [
-        { field: `Quarterly Total_${quarter}`, type: "quantitative", title: "Applications" }
+        {
+          bin: true,
+          field: "Applications",
+          type: "quantitative",
+          title: "Application Range"
+        },
+        {
+          aggregate: "count",
+          type: "quantitative",
+          title: "Number of Institutions"
+        }
       ]
     }
   };
   vegaEmbed("#altair-histogram", chart, { actions: false });
 }
+
 
 function populateStateDropdown() {
   const stateDropdown = document.getElementById("stateDropdown");
