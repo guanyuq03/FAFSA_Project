@@ -74,6 +74,7 @@ nav a:hover {
   padding: 25px 35px;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  animation: fadeIn 1s ease-out;
 }
 
 h2 {
@@ -95,20 +96,21 @@ h2 {
   padding: 12px 22px;
   margin: 0 6px;
   border: none;
-  background: #007acc;
+  background: linear-gradient(135deg, #007acc, #00b4d8);
   color: #fff;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
-  transition: all 0.3s ease;
+  font-weight: bold;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .tab-button:hover,
 .tab-button.active {
-  background: #005fa3;
+  background: linear-gradient(135deg, #005fa3, #009fc2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Controls */
@@ -135,11 +137,21 @@ h2 {
 }
 
 /* Chart Area */
-.chart-svg {
+.chart-svg,
+#map,
+#bar-chart,
+#scatter-plot,
+#state-bar-chart {
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 10px;
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .tooltip {
@@ -159,44 +171,16 @@ h2 {
   fill: #333;
 }
 
-/* Slideshow */
-.slideshow-container {
-  position: relative;
-  max-width: 100%;
-  height: 400px;
-  margin-bottom: 30px;
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.fade-slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  animation: fade 12s infinite;
-}
-
-.fade-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.fade-slide:nth-child(1) { animation-delay: 0s; }
-.fade-slide:nth-child(2) { animation-delay: 4s; }
-.fade-slide:nth-child(3) { animation-delay: 8s; }
-
-@keyframes fade {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  30% { opacity: 1; }
-  40% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
 /* Smooth Scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 14px;
+  color: #888;
+  padding-bottom: 20px;
 }
