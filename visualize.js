@@ -98,6 +98,7 @@ function updateCharts(quarter) {
   drawScatterPlot(quarter);
   embedAltairScatter(quarter);
   embedAltairHistogram(quarter);
+  embedAltairBoxplotAllQuarters(); 
 }
 
 function drawBarChart(quarter) {
