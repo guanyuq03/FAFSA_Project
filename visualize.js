@@ -36,6 +36,37 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+
+function embedAltairHistogram(quarter) {
+  const chart = {
+    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+    description: "Histogram of FAFSA Total Applications",
+    width: 800,  // Make it wider
+    height: 400,  // Make it taller
+    data: { url: "cleaned.csv" },
+    mark: "bar",
+    encoding: {
+      x: {
+        field: `Quarterly Total_${quarter}`,
+        bin: true,
+        type: "quantitative",
+        title: `FAFSA Total Applications (${quarter})`,
+        axis: { labelFontSize: 14, titleFontSize: 16 }
+      },
+      y: {
+        aggregate: "count",
+        type: "quantitative",
+        title: "Number of Institutions",
+        axis: { labelFontSize: 14, titleFontSize: 16 }
+      },
+      tooltip: [
+        { field: `Quarterly Total_${quarter}`, type: "quantitative", title: "Applications" }
+      ]
+    }
+  };
+  vegaEmbed("#altair-histogram", chart, { actions: false });
+}
+
 function populateStateDropdown() {
   const stateDropdown = document.getElementById("stateDropdown");
   const uniqueStates = Array.from(new Set(globalData.map(d => d.State.trim()).filter(d => d !== "")));
@@ -377,43 +408,74 @@ function updateCharts(quarter) {
   embedAltairHistogram(quarter);
 }
 
-function embedAltairScatter(quarter) {
-  const cutoff = +document.getElementById("cutoffRange").value;
-  const field = `Quarterly Total_${quarter}`;
-
+function embedAltairBoxplotAllQuarters() {
   const chart = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-    description: "Altair Scatter Plot with Cutoff",
+    description: "Boxplot of FAFSA Applications across Institution Types and Quarters",
+    width: 150,   
+    height: 400, 
     data: { url: "cleaned.csv" },
     transform: [
-      { filter: `datum["${field}"] != null && toNumber(datum["${field}"]) >= ${cutoff}` }
+      {
+        calculate: `datum["School Type"] == null || datum["School Type"] === "" ? "Unknown" : datum["School Type"]`,
+        as: "InstitutionType"
+      },
+      {
+        fold: ["Quarterly Total_Q1", "Quarterly Total_Q2", "Quarterly Total_Q3", "Quarterly Total_Q4", "Quarterly Total_Q5"],
+        as: ["Quarter", "TotalStr"]
+      },
+      {
+        calculate: "toNumber(datum.TotalStr)",
+        as: "Total"
+      },
+      {
+        filter: "datum.Total != null && isFinite(datum.Total)"
+      },
+      {
+        calculate: "replace(datum.Quarter, 'Quarterly Total_', '')",
+        as: "Quarter"
+      }
     ],
-    mark: "point",
-    encoding: {
-      x: { field: `Dependent Students_${quarter}`, type: "quantitative" },
-      y: { field: `Independent Students_${quarter}`, type: "quantitative" },
-      tooltip: [{ field: "School", type: "nominal" }]
-    }
-  };
-
-  vegaEmbed("#altair-scatter", chart, { actions: false });
-}
-
-function embedAltairHistogram(quarter) {
-  const chart = {
-    $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-    description: "Altair Histogram",
-    data: { url: "cleaned.csv" },
-    mark: "bar",
+    mark: {
+      type: "boxplot",
+      tooltip: true
+    },
     encoding: {
       x: {
-        field: `Quarterly Total_${quarter}`,
-        bin: true,
-        type: "quantitative",
-        title: `FAFSA Total Applications (${quarter})`
+        field: "InstitutionType",
+        type: "nominal",
+        title: "Institution Type",
+        axis: { labelFontSize: 12, titleFontSize: 14 }
       },
-      y: { aggregate: "count", type: "quantitative" }
+      y: {
+        field: "Total",
+        type: "quantitative",
+        title: "FAFSA Applications",
+        axis: { labelFontSize: 12, titleFontSize: 14 }
+      },
+      color: {
+        field: "InstitutionType",
+        type: "nominal",
+        legend: null
+      },
+      column: {
+        field: "Quarter",
+        type: "ordinal",
+        title: "Quarter",
+        spacing: 50,
+        header: { labelFontSize: 14, titleFontSize: 16 }
+      },
+      tooltip: [
+        { field: "Quarter", type: "nominal" },
+        { field: "InstitutionType", type: "nominal" },
+        { field: "Total", type: "quantitative" }
+      ]
+    },
+    config: {
+      view: { stroke: "transparent" }
     }
   };
-  vegaEmbed("#altair-histogram", chart, { actions: false });
+
+  vegaEmbed("#altair-boxplot", chart, { actions: false });
 }
+
