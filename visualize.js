@@ -16,9 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("Error loading CSV:", error);
   });
 
-  document.getElementById("cutoffRange").addEventListener("input", function () {
-    document.getElementById("cutoffValue").textContent = this.value;
-  });
 
   document.getElementById("stateDropdown").addEventListener("change", function () {
     selectedState = this.value;
