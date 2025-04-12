@@ -91,15 +91,6 @@ function populateStateDropdown() {
 
 function init() {}
 
-function updateCharts(quarter) {
-  embedAltairHistogram(quarter);
-  drawBarChart(quarter);
-  drawMapPlotly(quarter);
-  drawScatterPlot(quarter);
-  drawStateSideBySideBarChart(quarter);  
-  embedAltairBoxplotAllQuarters();
-}
-
 function drawBarChart(quarter) {
   const col = "Quarterly Total_" + quarter;
   const data = globalData
@@ -470,3 +461,11 @@ function embedAltairBoxplotAllQuarters() {
   vegaEmbed("#altair-boxplot", chart, { actions: false });
 }
 
+function updateCharts(quarter) {
+  embedAltairHistogram(quarter);
+  drawBarChart(quarter);
+  drawMapPlotly(quarter);
+  drawScatterPlot(quarter);
+  drawStateSideBySideBarChart(quarter);  
+  embedAltairBoxplotAllQuarters(); // this uses ALL quarters, not specific quarter
+}
